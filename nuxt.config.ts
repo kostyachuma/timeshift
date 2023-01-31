@@ -11,5 +11,12 @@ export default defineNuxtConfig({
     workbox: {
       enabled: true,
     },
+    icon: {
+        source: 'assets/images/logo/app.png'
+    },
+    manifest: {
+        name: 'Time Shift',
+        short_name: 'TS'
+    }
   },
 });
