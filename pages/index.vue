@@ -1,5 +1,8 @@
 <template>
   <div class="flex flex-col gap-4 px-4 pb-8 overflow-hidden">
+    <!-- country -->
+    <!-- <ui-select v-model="selectedTimeZoneObject" :options="timeZonesToLabledValue(timezones)" /> -->
+
     <!-- map -->
     <map-usa />
 
@@ -17,10 +20,11 @@
     <ui-select v-model="selectedTimeZoneObject" :options="timeZonesToLabledValue(timezones)" />
 
     <!-- selector -->
-    <div class="bg-gray-100 pt-2 px-4 rounded-xl text-center">
-      <input v-model="time" type="time" class="text-3xl bg-transparent" />
+    <div class="bg-gray-100 px-4 py-6 rounded-xl text-center">
+      <input v-model="time" type="time" class="text-3xl bg-transparent mb-6" />
       <input v-model="rangeTime" type="range" min="0" max="86340000" step="60000" class="w-full" />
     </div>
+
   </div>
 </template>
 

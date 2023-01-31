@@ -10,6 +10,7 @@
     "start": "node .output/server/index.mjs"
   },
   "devDependencies": {
+    "@kevinmarrec/nuxt-pwa": "^0.15.0",
     "@nuxtjs/tailwindcss": "^6.3.0",
     "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
