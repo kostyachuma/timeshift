@@ -12,6 +12,7 @@
       </li>
     </ul>
 
+
     <!-- country -->
     <ui-select v-model="selectedTimeZoneObject" :options="timeZonesToLabledValue(timezones)" />
 
