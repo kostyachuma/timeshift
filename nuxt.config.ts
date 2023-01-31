@@ -12,11 +12,11 @@ export default defineNuxtConfig({
       enabled: true,
     },
     icon: {
-        source: 'assets/images/logo/app.png'
+        source: 'assets/images/logo/app.png',
+        maskablePadding: 0
     },
     manifest: {
         name: 'Time Shift',
-        short_name: 'TS'
     }
   },
 });
