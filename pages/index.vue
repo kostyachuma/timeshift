@@ -20,7 +20,7 @@
     <ui-select v-model="selectedTimeZoneObject" :options="timeZonesToLabledValue(timezones)" />
 
     <!-- selector -->
-    <div class="bg-gray-100 px-4 py-6 rounded-xl text-center">
+    <div class="bg-sky-50 px-4 py-6 rounded-xl text-center">
       <input v-model="time" type="time" class="text-3xl bg-transparent mb-6" />
       <input v-model="rangeTime" type="range" min="0" max="86340000" step="60000" class="w-full" />
     </div>
