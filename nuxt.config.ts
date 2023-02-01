@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     },
     icon: false,
     meta: {
-      appleStatusBarStyle: 'black-translucent',
+      appleStatusBarStyle: 'black',
       theme_color: '#dbeafe'
     },
     manifest: {
