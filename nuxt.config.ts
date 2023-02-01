@@ -1,6 +1,4 @@
-import { icons } from './public/appImages/icons.json'
-
-console.log(icons)
+import { icons } from './public/appicons/icons.json'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
