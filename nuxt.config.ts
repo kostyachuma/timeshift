@@ -21,7 +21,8 @@ export default defineNuxtConfig({
     manifest: {
         name: 'Time Shift',
         icons: icons,
-        background_color: '#dbeafe'
+        background_color: '#dbeafe',
+        theme_color: '#dbeafe'
     },
 
   },
