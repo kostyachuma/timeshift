@@ -1,3 +1,7 @@
+import { icons } from './public/appImages/icons.json'
+
+console.log(icons)
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
@@ -11,18 +15,10 @@ export default defineNuxtConfig({
     workbox: {
       enabled: true,
     },
-    icon: {
-        source: 'assets/images/logo/app.png',
-        maskablePadding: 0,
-        maskableSource: null,
-        splash: {
-            backgroundColor: '#FFFFFF',
-            devices: [],
-            targetDir: "splash"
-        }
-    },
+    icon: false,
     manifest: {
         name: 'Time Shift',
+        icons: icons
     }
   },
 });
