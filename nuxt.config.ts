@@ -15,7 +15,8 @@ export default defineNuxtConfig({
     },
     icon: false,
     meta: {
-      appleStatusBarStyle: 'black-translucent'
+      appleStatusBarStyle: 'black-translucent',
+      theme_color: '#dbeafe'
     },
     manifest: {
         name: 'Time Shift',
