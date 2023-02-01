@@ -13,7 +13,13 @@ export default defineNuxtConfig({
     },
     icon: {
         source: 'assets/images/logo/app.png',
-        maskablePadding: 0
+        maskablePadding: 0,
+        maskableSource: null,
+        splash: {
+            backgroundColor: '#FFFFFF',
+            devices: [],
+            targetDir: "splash"
+        }
     },
     manifest: {
         name: 'Time Shift',
