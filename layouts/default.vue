@@ -1,7 +1,7 @@
 <template>
   <div class="bg-slate-100">
-    <div class="min-h-screen bg-blue-100 max-w-xl mx-auto grid">
-      <AppHeader />
+    <div class="relative min-h-screen bg-blue-100 max-w-xl mx-auto flex flex-col">
+      <!-- <AppHeader class="relative z-50 self-start w-full" /> -->
       <slot />
     </div>
   </div>

@@ -10,19 +10,19 @@ export default defineNuxtConfig({
   ],
 
   pwa: {
-    workbox: {
-      enabled: true,
-    },
+    // workbox: {
+    //   enabled: false,
+    // },
     icon: false,
     meta: {
       appleStatusBarStyle: 'black',
-      theme_color: '#dbeafe'
+      theme_color: '#c9d2d3'
     },
     manifest: {
         name: 'Time Shift',
         icons: icons,
-        background_color: '#dbeafe',
-        theme_color: '#dbeafe'
+        background_color: '#c9d2d3',
+        theme_color: '#c9d2d3'
     },
 
   },
