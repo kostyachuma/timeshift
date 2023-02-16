@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-sky-50 px-4 py-4 rounded-xl text-center">
+    <div class="bg-slate-200 px-4 py-4 rounded-xl text-center shadow-md">
         <input v-model="time" type="time" class="text-3xl bg-transparent mb-6" />
         <input :value="timeToMs(time)" type="range" min="0" max="86340000" step="60000" class="ui-time-range w-full"
             @input="time = msToTime($event.target.value)" />

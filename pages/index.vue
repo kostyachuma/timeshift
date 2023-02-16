@@ -13,7 +13,7 @@
 
     <!--   result -->
     <div class="flex flex-col gap-2 relative z-10 mt-auto">
-      <ul class="mt-auto flex rounded-xl overflow-hidden">
+      <ul class="mt-auto flex rounded-xl overflow-hidden shadow-md">
         <li v-for="{ name, time, color } in zones" :key="name" class="flex flex-col py-3 w-full text-center"
           :style="`background-color: ${color}`">
           <span class="text-gray-700 font-bold text-xs">{{ name }}</span>

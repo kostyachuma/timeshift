@@ -1,5 +1,5 @@
 <template>
-  <select :value="modelValue" class="bg-sky-50 border-none h-12 rounded-xl px-4" v-bind="$attrs"
+  <select :value="modelValue" class="bg-slate-200 border-none h-12 rounded-xl px-4 shadow-md" v-bind="$attrs"
     @input="$emit('update:modelValue', $event.target.value)">
     <option v-for="{ label, value } in options" :key="label">
       {{ value }}
