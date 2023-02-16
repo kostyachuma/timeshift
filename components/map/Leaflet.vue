@@ -5,23 +5,26 @@
         :url="providerURL"
         :options="tileOptions"
       />
-      <l-geo-json v-if="combined" :geojson="combined" :options-style="style" />
+      <l-geo-json
+        v-if="combined"
+        :geojson="combined"
+        :options-style="style"
+      />
     </l-map>
   </div>
 </template>
   
 <script>
+import { LMap, LGeoJson, LTileLayer } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LGeoJson } from "@vue-leaflet/vue-leaflet";
-// import combined from '@/lib/Time_Zones.json'
 
 const accessToken = '8FYQGFW7TbGM9vBzLzKaXad3djo2XPNmbF17eJXxQNf8PozitsjuzTcvmdDsVpCn'
 
 export default {
   components: {
     LMap,
-    LTileLayer,
     LGeoJson,
+    LTileLayer,
   },
   data() {
     return {
