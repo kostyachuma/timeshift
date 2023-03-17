@@ -1,13 +1,14 @@
 <template>
-  <div class="flex flex-col px-4 pt-4 pb-8 overflow-hidden grow">
+  <div class="flex flex-col px-4 pt-4 pb-8 max-w-xl w-full mx-auto grow">
     <!-- country -->
     <ui-select
-      value="United States"
+      v-model="selectedCountry"
       :options="countryesOptions"
       class="relative z-10"
     />
 
-    <map-leaflet class="absolute w-full h-full left-0 top-0 z-0"/>
+    <!-- <map-leaflet class="absolute w-full h-full left-0 top-0 z-0"/> -->
+    <map-leaflet-ca :country="selectedCountry" class="absolute w-full h-full left-0 top-0 z-0"/>
 
     <!-- <map-usa /> -->
 
@@ -30,6 +31,7 @@
 
 <script setup>
 import timezones from '@/lib/timezones.json'
+import ct from 'countries-and-timezones';
 
 const USTimeZones = [
   {
@@ -54,7 +56,9 @@ const USTimeZones = [
   },
 ];
 
+
 let time = ref("00:00");
+let selectedCountry = ref("US");
 let selectedTimeZone = reactive({});
 
 onMounted(async () => {
@@ -69,12 +73,18 @@ onMounted(async () => {
   });
 });
 
-const countryesOptions = [
-  {
-    label: 'United States',
-    value: 'United States',
-  }
-]
+const getCountryes = () => {
+  const countryes = ct.getAllCountries()
+  return Object.values(countryes).map(country => {
+    return {
+      ...country,
+      label: country.name,
+      value: country.id,
+    }
+  })
+}
+
+const countryesOptions = getCountryes()
 
 const selectedTimeZoneObject = computed({
   get() {
