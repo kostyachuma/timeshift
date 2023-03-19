@@ -22,7 +22,7 @@ import geojson from "@/lib/geo.json";
 import ct from 'countries-and-timezones';
 const accessToken = '8FYQGFW7TbGM9vBzLzKaXad3djo2XPNmbF17eJXxQNf8PozitsjuzTcvmdDsVpCn'
 
-const colors = [
+const COLORS = [
   '#ff0000',
   '#ff8000',
   '#ffff00',
@@ -115,7 +115,7 @@ export default {
             properties: {
               ...feature.properties,
               utc: offset,
-              color: colors[Math.abs(offset || 0)]
+              color: COLORS[Math.abs(offset || 0)]
             }
           }
         })

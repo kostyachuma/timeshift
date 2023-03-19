@@ -8,19 +8,28 @@
     />
 
     <!-- <map-leaflet class="absolute w-full h-full left-0 top-0 z-0"/> -->
-    <map-leaflet-ca :country="selectedCountry" class="absolute w-full h-full left-0 top-0 z-0"/>
+    <map-leaflet-ca
+      :country="selectedCountry"
+      class="absolute w-full h-full left-0 top-0 z-0"
+    />
 
     <!-- <map-usa /> -->
 
     <!--   result -->
-    <div class="flex flex-col gap-2 relative z-10 mt-auto">
-      <ul class="mt-auto flex rounded-xl overflow-hidden shadow-md">
-        <li v-for="{ name, time, color } in zones" :key="name" class="flex flex-col py-3 w-full text-center"
-          :style="`background-color: ${color}`">
-          <span class="text-gray-700 font-bold text-xs">{{ name }}</span>
-          <span class="text-xl font-bold text-white">{{ time }}</span>
-        </li>
-      </ul>
+    <div class="flex flex-col gap-2 relative z-10 mt-auto" @click="toggle">
+      <div class="mt-auto overflow-auto rounded-xl shadow-md">
+        <ul class="whitespace-nowrap flex">
+          <li
+            v-for="{ name, time, color } in zones"
+            :key="name"
+            class="flex flex-col py-3 px-3 w-full text-center"
+            :style="`background-color: ${color}`"
+          >
+            <span v-if="!isColapsed" class="text-gray-700 font-bold text-xs">{{ name }}</span>
+            <span class="text-xl font-bold text-white">{{ time }}</span>
+          </li>
+        </ul>
+      </div>
 
       <ui-select v-model="selectedTimeZoneObject" :options="timeZoneOptions" />
 
@@ -30,98 +39,137 @@
 </template>
 
 <script setup>
-import timezones from '@/lib/timezones.json'
-import ct from 'countries-and-timezones';
+  import timezones from "@/lib/timezones.json";
+  import ct from "countries-and-timezones";
+  import _ from 'lodash'
 
-const USTimeZones = [
-  {
-    value: "Pacific Standard Time",
-    name: "Pacific",
-    color: "#edc282",
-  },
-  {
-    value: "Mountain Standard Time",
-    name: "Mauntain",
-    color: "#fc8ca1",
-  },
-  {
-    value: "Central Standard Time",
-    name: "Central",
-    color: "#95b5e0",
-  },
-  {
-    value: "Eastern Standard Time",
-    name: "Eastern",
-    color: "#d5e378",
-  },
-];
+  const COLORS = [
+    '#ff0000',
+    '#ff8000',
+    '#ffff00',
+    '#80ff00',
+    '#00ff00',
+    '#00ff80',
+    '#00ffff',
+    '#0080ff',
+    '#0000ff',
+    '#8000ff',
+    '#ff00ff',
+    '#ff0080',
+    '#7a97a0',
+  ]
 
+  let time = ref("00:00");
+  let selectedCountry = ref("US");
+  let selectedTimeZone = reactive({});
+  let isColapsed = ref(false);
 
-let time = ref("00:00");
-let selectedCountry = ref("US");
-let selectedTimeZone = reactive({});
+  onMounted(async () => {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    Object.assign(
+      selectedTimeZone,
+      timezones.find(({ utc = [] }) => utc.includes(timezone))
+    );
 
-onMounted(async () => {
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  Object.assign(selectedTimeZone, timezones.find(({ utc = [] }) =>
-    utc.includes(timezone)
-  ))
-
-  time.value = new Date().toLocaleTimeString("en-US", {
-    timeStyle: "short",
-    hour12: false,
+    time.value = new Date().toLocaleTimeString("en-US", {
+      timeStyle: "short",
+      hour12: false,
+    });
   });
-});
 
-const getCountryes = () => {
-  const countryes = ct.getAllCountries()
-  return Object.values(countryes).map(country => {
-    return {
-      ...country,
-      label: country.name,
-      value: country.id,
-    }
-  })
-}
+  const getCountryes = () => {
+    const countryes = ct.getAllCountries();
+    return Object.values(countryes).map((country) => {
+      return {
+        ...country,
+        label: country.name,
+        value: country.id,
+      };
+    });
+  };
 
-const countryesOptions = getCountryes()
+  const countryesOptions = getCountryes();
 
-const selectedTimeZoneObject = computed({
-  get() {
-    return selectedTimeZone?.text;
-  },
-  set(value) {
-    selectedTimeZone = timezones.find(({ text }) => text === value);
-  },
-});
+  const selectedTimeZoneObject = computed({
+    get() {
+      return selectedTimeZone?.text;
+    },
+    set(value) {
+      selectedTimeZone = timezones.find(({ text }) => text === value);
+    },
+  });
 
-const timeZoneOptions = timezones.map(item => ({
-  ...item,
-  label: item.text,
-  value: item.text,
-}))
+  const timeZoneOptions = timezones.map((item) => ({
+    ...item,
+    label: item.text,
+    value: item.text,
+  }));
 
-const zones = computed(() => {
-  return timezones.reduce((acc, zone) => {
-    const current = USTimeZones.find(({ value }) => value === zone.value);
+  const toggle = () => {
+    isColapsed.value = !isColapsed.value;
+  };
 
-    if (current) {
-      const today = new Date();
-      const splitTime = time.value.split(":");
+  const zones = computed(() => {
+    const zones = ct.getTimezonesForCountry(selectedCountry.value);
 
-      today.setHours(splitTime[0], splitTime[1], 0);
+    console.log(zones);
 
-      acc.push({
-        ...zone,
-        ...current,
-        time: today.toLocaleTimeString("en-US", {
-          timeZone: zone.utc[0],
-          timeStyle: "short",
-          hour12: false,
-        })
-      });
-    }
-    return acc;
-  }, []);
-});
+    const formated = zones
+      .sort((a, b) => {
+        const aOffset = parseInt(a?.utcOffsetStr.split(":"));
+        const bOffset = parseInt(b?.utcOffsetStr.split(":"));
+
+        return aOffset - bOffset;
+      })
+      .map((item) => {
+        const offset = parseInt(item?.utcOffsetStr.split(":"));
+
+        return {
+          ...item,
+          value: item.name,
+          name: item.name,
+          color: COLORS[Math.abs(offset || 0)],
+          time: new Date().toLocaleTimeString("en-US", {
+            timeZone: item.name,
+            timeStyle: "short",
+            hour12: false,
+          }),
+        };
+    });
+
+    const colapsed = formated.reduce((acc, zone) => {
+      const item = !acc.some(({ utcOffsetStr }) => utcOffsetStr === zone.utcOffsetStr)
+        ? [zone]
+        : [];
+
+      return [
+        ...acc,
+        ...item,
+      ];
+    }, []);
+
+    return isColapsed.value ? colapsed : formated;
+
+    // return timezones.reduce((acc, zone) => {
+    //   const current = USTimeZones.find(({ value }) => value === zone.value);
+
+    //   if (current) {
+    //     const today = new Date();
+    //     const splitTime = time.value.split(":");
+
+    //     today.setHours(splitTime[0], splitTime[1], 0);
+
+    //     acc.push({
+    //       ...zone,
+    //       ...current,
+    //       time: today.toLocaleTimeString("en-US", {
+    //         timeZone: zone.utc[0],
+    //         timeStyle: "short",
+    //         hour12: false,
+    //       })
+    //     });
+    //   }
+    //   return acc;
+    // }, []);
+  });
 </script>
