@@ -16,13 +16,13 @@
     <!-- <map-usa /> -->
 
     <!--   result -->
-    <div class="flex flex-col gap-2 relative z-10 mt-auto" @click="toggle">
-      <div class="mt-auto overflow-auto rounded-xl shadow-md">
+    <div class="flex flex-col gap-2 relative z-10 mt-auto overflow-hidden" @click="toggle">
+      <div class="scroll-hidden mt-auto overflow-auto shadow-md">
         <ul class="whitespace-nowrap flex">
           <li
             v-for="{ name, time, color } in zones"
             :key="name"
-            class="flex flex-col py-3 px-3 w-full text-center"
+            class="flex flex-col py-3 px-3 w-full text-center first:rounded-l-xl last:rounded-r-xl"
             :style="`background-color: ${color}`"
           >
             <span v-if="!isColapsed" class="text-gray-700 font-bold text-xs">{{ name }}</span>
@@ -62,7 +62,7 @@
   let time = ref("00:00");
   let selectedCountry = ref("US");
   let selectedTimeZone = reactive({});
-  let isColapsed = ref(false);
+  let isColapsed = ref(true);
 
   onMounted(async () => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -173,3 +173,16 @@
     // }, []);
   });
 </script>
+
+<style>
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scroll-hidden {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+</style>
