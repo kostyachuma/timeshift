@@ -8,7 +8,7 @@
         class="w-full relative z-10"
       />
       <button
-        class="bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
+        class="shrink bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
         @click="isList = !isList"
       >
         <list-icon v-if="!isList" class="w-8 h-8 fill-current text-black" />
@@ -56,7 +56,7 @@
             :style="`background-color: ${color}`"
           >
             <span v-if="isList || !isColapsed" class="text-gray-700 font-bold text-xs">{{ name }}</span>
-            <span class="text-xl font-bold text-white">{{ time }}</span>
+            <span class="text-xl font-bold text-white tabular-nums">{{ time }}</span>
           </li>
         </ul>
       </div>
