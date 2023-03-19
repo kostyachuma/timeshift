@@ -1,4 +1,5 @@
 import { icons } from './public/appicons/icons.json'
+import svgLoader from 'vite-svg-loader'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -24,6 +25,11 @@ export default defineNuxtConfig({
         background_color: '#c9d2d3',
         theme_color: '#c9d2d3'
     },
+  },
 
+  vite: {
+    plugins: [
+      svgLoader(),
+    ],
   },
 });

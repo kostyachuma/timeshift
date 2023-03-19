@@ -1,31 +1,61 @@
 <template>
-  <div class="flex flex-col px-4 pt-4 pb-8 max-w-xl w-full mx-auto grow">
+  <div class="flex flex-col gap-2 px-4 pt-4 pb-8 max-w-xl w-full mx-auto grow">
     <!-- country -->
-    <ui-select
-      v-model="selectedCountry"
-      :options="countryesOptions"
-      class="relative z-10"
-    />
+    <div class="flex gap-2">
+      <ui-select
+        v-model="selectedCountry"
+        :options="countryesOptions"
+        class="w-full relative z-10"
+      />
+      <button
+        class="bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
+        @click="isList = !isList"
+      >
+        <list-icon v-if="!isList" class="w-8 h-8 fill-current text-black" />
+        <map-icon v-else class="w-8 h-8 fill-current text-black" />
+      </button>
+    </div>
 
-    <!-- <map-leaflet class="absolute w-full h-full left-0 top-0 z-0"/> -->
+    <!-- map -->
     <map-leaflet-ca
+      v-if="!isList"
       :country="selectedCountry"
       class="absolute w-full h-full left-0 top-0 z-0"
     />
 
-    <!-- <map-usa /> -->
-
     <!--   result -->
-    <div class="flex flex-col gap-2 relative z-10 mt-auto overflow-hidden" @click="toggle">
-      <div class="scroll-hidden mt-auto overflow-auto shadow-md">
-        <ul class="whitespace-nowrap flex">
+    <div
+      :class="{
+        'mt-auto': !isList,
+        'grow': isList,
+      }"
+      class="flex flex-col gap-2 relative z-10 overflow-hidden"
+    >
+      <div
+        :class="{
+          'grow': isList,
+          'scroll-hidden overflow-auto': !isList
+        }"
+        class="relative"
+        @click="toggle"
+      >
+        <ul
+          :class="{
+            'flex-col gap-2 absolute w-full h-full overflow-auto': isList,
+            'flex-row': !isList,
+          }"
+          class="whitespace-nowrap flex">
           <li
             v-for="{ name, time, color } in zones"
             :key="name"
-            class="flex flex-col py-3 px-3 w-full text-center first:rounded-l-xl last:rounded-r-xl"
+            :class="{
+              'rounded-xl': isList,
+              'first:rounded-l-xl last:rounded-r-xl': !isList,
+            }"
+            class="flex flex-col py-3 px-3 w-full text-center"
             :style="`background-color: ${color}`"
           >
-            <span v-if="!isColapsed" class="text-gray-700 font-bold text-xs">{{ name }}</span>
+            <span v-if="isList || !isColapsed" class="text-gray-700 font-bold text-xs">{{ name }}</span>
             <span class="text-xl font-bold text-white">{{ time }}</span>
           </li>
         </ul>
@@ -42,6 +72,8 @@
   import timezones from "@/lib/timezones.json";
   import ct from "countries-and-timezones";
   import _ from 'lodash'
+  import ListIcon from '@/assets/icons/list.svg?component'
+  import MapIcon from '@/assets/icons/map.svg?component'
 
   const COLORS = [
     '#ff0000',
@@ -63,6 +95,7 @@
   let selectedCountry = ref("US");
   let selectedTimeZone = reactive({});
   let isColapsed = ref(true);
+  let isList = ref(false);
 
   onMounted(async () => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -106,13 +139,13 @@
   }));
 
   const toggle = () => {
+    if (isList.value) return;
+
     isColapsed.value = !isColapsed.value;
   };
 
   const zones = computed(() => {
     const zones = ct.getTimezonesForCountry(selectedCountry.value);
-
-    console.log(zones);
 
     const formated = zones
       .sort((a, b) => {
@@ -123,13 +156,17 @@
       })
       .map((item) => {
         const offset = parseInt(item?.utcOffsetStr.split(":"));
+        const today = new Date();
+        const splitTime = time.value.split(":");
+
+        today.setHours(splitTime[0], splitTime[1], 0);
 
         return {
           ...item,
           value: item.name,
           name: item.name,
           color: COLORS[Math.abs(offset || 0)],
-          time: new Date().toLocaleTimeString("en-US", {
+          time: today.toLocaleTimeString("en-US", {
             timeZone: item.name,
             timeStyle: "short",
             hour12: false,
@@ -148,29 +185,7 @@
       ];
     }, []);
 
-    return isColapsed.value ? colapsed : formated;
-
-    // return timezones.reduce((acc, zone) => {
-    //   const current = USTimeZones.find(({ value }) => value === zone.value);
-
-    //   if (current) {
-    //     const today = new Date();
-    //     const splitTime = time.value.split(":");
-
-    //     today.setHours(splitTime[0], splitTime[1], 0);
-
-    //     acc.push({
-    //       ...zone,
-    //       ...current,
-    //       time: today.toLocaleTimeString("en-US", {
-    //         timeZone: zone.utc[0],
-    //         timeStyle: "short",
-    //         hour12: false,
-    //       })
-    //     });
-    //   }
-    //   return acc;
-    // }, []);
+    return !isList.value && isColapsed.value ? colapsed : formated;
   });
 </script>
 
