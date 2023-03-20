@@ -181,7 +181,7 @@
 }
 
 .list-item-row .list-item-label {
-  @apply text-lg mr-auto;
+  @apply text-base mr-auto;
 }
 
 .list-item-row .list-item-value {
