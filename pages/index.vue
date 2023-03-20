@@ -17,7 +17,7 @@
     </div>
 
     <!-- map -->
-    <map-leaflet-ca
+    <map-leaflet
       v-if="!isList"
       :country="selectedCountry"
       class="absolute w-full h-full left-0 top-0 z-0"
@@ -29,7 +29,7 @@
         'mt-auto': !isList,
         'grow': isList,
       }"
-      class="flex flex-col gap-2 relative z-10 overflow-hidden"
+      class="flex flex-col gap-2 relative z-10 max-w-full"
     >
       <div
         :class="{
@@ -74,22 +74,7 @@
   import _ from 'lodash'
   import ListIcon from '@/assets/icons/list.svg?component'
   import MapIcon from '@/assets/icons/map.svg?component'
-
-  const COLORS = [
-    '#ff0000',
-    '#ff8000',
-    '#ffff00',
-    '#80ff00',
-    '#00ff00',
-    '#00ff80',
-    '#00ffff',
-    '#0080ff',
-    '#0000ff',
-    '#8000ff',
-    '#ff00ff',
-    '#ff0080',
-    '#7a97a0',
-  ]
+  import { COLORS } from '@/constants'
 
   let time = ref("00:00");
   let selectedCountry = ref("US");
