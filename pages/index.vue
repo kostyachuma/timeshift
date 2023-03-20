@@ -8,7 +8,7 @@
         class="w-full relative z-10"
       />
       <button
-        class="shrink bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
+        class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
         @click="isList = !isList"
       >
         <list-icon v-if="!isList" class="w-8 h-8 fill-current text-black" />
@@ -17,6 +17,7 @@
     </div>
 
     <!-- map -->
+
     <map-leaflet
       v-if="!isList"
       :country="selectedCountry"
@@ -48,15 +49,11 @@
           <li
             v-for="{ name, time, color } in zones"
             :key="name"
-            :class="{
-              'rounded-xl': isList,
-              'first:rounded-l-xl last:rounded-r-xl': !isList,
-            }"
-            class="flex flex-col py-3 px-3 w-full text-center"
+            :class="[isList ? 'list-item-row' : 'list-item']"
             :style="`background-color: ${color}`"
           >
-            <span v-if="isList || !isColapsed" class="text-gray-700 font-bold text-xs">{{ name }}</span>
-            <span class="text-xl font-bold text-white tabular-nums">{{ time }}</span>
+            <span v-if="isList || !isColapsed" class="list-item-label text-gray-700 font-bold text-xs">{{ name }}</span>
+            <span class="list-item-value text-xl font-bold text-white tabular-nums">{{ time }}</span>
           </li>
         </ul>
       </div>
@@ -175,6 +172,22 @@
 </script>
 
 <style>
+.list-item {
+  @apply flex flex-col py-3 px-3 w-full text-center first:rounded-l-xl last:rounded-r-xl;
+}
+
+.list-item-row {
+  @apply flex items-center py-3 px-3 w-full text-center rounded-xl;
+}
+
+.list-item-row .list-item-label {
+  @apply text-lg mr-auto;
+}
+
+.list-item-row .list-item-value {
+  @apply ml-auto;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .scroll-hidden::-webkit-scrollbar {
   display: none;
