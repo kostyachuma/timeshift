@@ -1,18 +1,24 @@
 <template>
-  <l-map
-    ref="myMap"
-    :options="settings"
-    class="map"
-  >
-    <l-tile-layer
-      :url="providerURL"
-      :options="tileOptions"
-    />
-    <l-geo-json
-      :geojson="geo"
-      :options-style="style"
-    />
-  </l-map>
+  <div class="">
+    <l-map
+      ref="myMap"
+      :zoom="zoom"
+      :center="center"
+      :options="mapOptions"
+      class="map"
+      @update:center="centerUpdate"
+      @update:zoom="zoomUpdate"
+    >
+      <l-tile-layer
+        :url="providerURL"
+        :options="tileOptions"
+      />
+      <l-geo-json
+        :geojson="geo"
+        :options-style="style"
+      />
+    </l-map>
+  </div>
 </template>
   
 <script>
@@ -37,43 +43,42 @@ export default {
       default: ''
     }
   },
-  data() {
+  data () {
     return {
-      geojson: geojson,
-      tileOptions: {
-        attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }
-    };
+      center: latLng(28.9, -97.9),
+      zoom: 3.5,
+    }
   },
   computed: {
-    settings () {
+    providerURL() {
+      return [
+        `https://{s}.tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token=${accessToken}`,
+        `https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=${accessToken}`
+      ][1]
+    },
+    tileOptions() {
+      return {
+        attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }
+    },
+    mapOptions () {
       return {
         maxBoundsViscosity: 1.0,
         zoomControl: false,
-        zoom: 3.5,
-        minZoom: 3,
+        minZoom: 2,
         maxZoom: 5,
-        center: latLng(28.976730551346048, -97.99363741643089),
         maxBounds: [
           //south west
-          [84.16692790181882, 179.89894627868037],
+          [-90,-180],
           //north east
-          [-64.61290574810766, -178.74074630796935]
+          [90,180]
         ],
-      }
-    },
-    countrySettings () {
-      return {
-        US: {
-          zoom: 3.5,
-          center: latLng(28.976730551346048, -97.99363741643089),
-        }
       }
     },
     geo () {
       const zones = ct.getTimezonesForCountry(this.country);
 
-      return this.geojson.features
+      return geojson.features
         .filter(({ properties }) => {
           return zones
             .map(({ name }) => name)
@@ -96,32 +101,46 @@ export default {
           }
         })
     },
-    providerURL() {
-      return [
-        `https://{s}.tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token=${accessToken}`,
-        `https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=${accessToken}`
-      ][1]
+    countrySettings () {
+      return {
+        US: {
+          zoom: 3,
+          center: latLng(28.976730551346048, -97.99363741643089),
+        },
+        CA: {
+          zoom: 3,
+          center: latLng(56.130366, -106.346771),
+        },
+        UA : {
+          zoom: 4,
+          center: latLng(48.379433, 31.16558),
+        },
+      }
+    },
+  },
+  watch: {
+    country: {
+      handler (country) {
+        const { center, zoom } = this.countrySettings[country] || this.countrySettings.US
+
+        this.centerUpdate(center).then(() => {
+          this.zoomUpdate(zoom)
+        })
+      },
+      immediate: true
     }
   },
-  // watch: {
-  //   country: {
-  //     handler (country) {
-  //       this.centerMap(this.countrySettings[country] || this.countrySettings['US'])
-  //     },
-  //     immediate: true
-  //   }
-  // },
   methods: {
     style (feature) {
       return { color: feature?.properties?.color || '#95b5e0' }
     },
-    centerMap ({ center, zoom }) {
-      this.$nextTick(() => {
-        const map = this.$refs.myMap.leafletObject;
-        console.log(this.$refs.myMap, toRaw(this.$refs.myMap));
-        map.mapObject.setView(center, zoom);
-      });
-    }
+    centerUpdate (center) {
+      this.center = center
+      return Promise.resolve(center)
+    },
+    zoomUpdate (zoom) {
+      this.zoom = zoom
+    },
   }
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-2 px-4 pt-4 pb-8 max-w-xl w-full mx-auto grow">
-    <!-- country -->
+    <!-- Country -->
     <div class="flex gap-2">
       <ui-select
         v-model="selectedCountry"
@@ -16,15 +16,14 @@
       </button>
     </div>
 
-    <!-- map -->
-
+    <!-- Map -->
     <map-leaflet
       v-if="!isList"
       :country="selectedCountry"
       class="absolute w-full h-full left-0 top-0 z-0"
     />
 
-    <!--   result -->
+    <!-- Result -->
     <div
       :class="{
         'mt-auto': !isList,
