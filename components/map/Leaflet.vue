@@ -26,6 +26,7 @@ import { LMap, LGeoJson, LTileLayer } from "@vue-leaflet/vue-leaflet";
 import { latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import geojson from "@/lib/geo.json";
+import countrySettings from "@/lib/country-settings.json";
 import ct from 'countries-and-timezones';
 import { COLORS } from '@/constants'
 
@@ -45,8 +46,9 @@ export default {
   },
   data () {
     return {
+      zoom: 3,
       center: latLng(28.9, -97.9),
-      zoom: 3.5,
+      countrySettings,
     }
   },
   computed: {
@@ -66,13 +68,8 @@ export default {
         maxBoundsViscosity: 1.0,
         zoomControl: false,
         minZoom: 2,
-        maxZoom: 5,
-        maxBounds: [
-          //south west
-          [-90,-180],
-          //north east
-          [90,180]
-        ],
+        maxZoom: 12,
+        maxBounds: [[-90,-180], [90,180]],
       }
     },
     geo () {
@@ -101,29 +98,15 @@ export default {
           }
         })
     },
-    countrySettings () {
-      return {
-        US: {
-          zoom: 3,
-          center: latLng(28.976730551346048, -97.99363741643089),
-        },
-        CA: {
-          zoom: 3,
-          center: latLng(56.130366, -106.346771),
-        },
-        UA : {
-          zoom: 4,
-          center: latLng(48.379433, 31.16558),
-        },
-      }
-    },
   },
   watch: {
     country: {
       handler (country) {
         const { center, zoom } = this.countrySettings[country] || this.countrySettings.US
 
-        this.centerUpdate(center).then(() => {
+        this.centerUpdate(center)
+
+        this.$nextTick(() => {
           this.zoomUpdate(zoom)
         })
       },
@@ -136,7 +119,6 @@ export default {
     },
     centerUpdate (center) {
       this.center = center
-      return Promise.resolve(center)
     },
     zoomUpdate (zoom) {
       this.zoom = zoom
