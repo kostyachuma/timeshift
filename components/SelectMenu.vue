@@ -3,7 +3,7 @@
     :class="[
       show ? 'translate-x-0' : '-translate-x-full',
     ]"
-    class="absolute top-0 left-0 w-full h-full bg-slate-800 z-30 py-6 px-8 flex flex-col transition-all duration-300 ease-in-out transform"
+    class="absolute top-0 left-0 w-full h-full bg-slate-800 z-30 pt-6 px-8 flex flex-col transition-all duration-300 ease-in-out transform"
   >
     <div class="flex gap-2">
       <ui-input
@@ -23,17 +23,17 @@
         <close-icon class="w-8 h-8 fill-current text-black" />
       </button>
     </div>
-<!-- 
+
     <div class="flex gap-2 mb-4">
       <button class="grow bg-slate-200 hover:bg-slate-300 py-2 px-4 rounded-xl text-base text-black">{{ 'Add new' }}</button>
       <button class="grow bg-slate-200 hover:bg-slate-300 py-2 px-4 rounded-xl text-base text-black">{{ 'All' }}</button>
       <button class="grow bg-slate-200 hover:bg-slate-300 py-2 px-4 rounded-xl text-base text-black">{{ 'My' }}</button>
       <button class="grow bg-slate-200 hover:bg-slate-300 py-2 px-4 rounded-xl text-base text-black">{{ 'Countries' }}</button>
       <button class="grow bg-slate-200 hover:bg-slate-300 py-2 px-4 rounded-xl text-base text-black">{{ 'Cityes' }}</button>
-    </div> -->
+    </div>
 
     <!-- list -->
-    <div class="flex flex-col gap-2 grow overflow-auto">
+    <div class="flex flex-col gap-2 grow overflow-auto scrollbar-hide">
       <div
         v-for="option of filteredOptions"
         :key="option.label"

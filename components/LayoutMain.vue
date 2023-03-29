@@ -7,7 +7,7 @@
                 <slot name="head" />
             </div>
 
-            <div class="grow px-8 overflow-auto">
+            <div class="grow px-8 overflow-auto scrollbar-hide">
                 <slot name="list" />
                 <!-- <slot name="slider" /> -->
             </div>
