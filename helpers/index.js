@@ -10,3 +10,19 @@ export function msToTime(ms = 0) {
   const format = (value) => `${value < 10 ? "0" : ""}${value}`;
   return format(hours) + ":" + format(minutes);
 }
+
+/**
+ * @param {string} time 'HH:MM'
+ */
+export function convertTime (time, timeZone) {
+  const today = new Date();
+  const splitTime = time.split(":");
+
+  today.setHours(splitTime[0], splitTime[1], 0);
+
+  return today.toLocaleTimeString("en-US", {
+      timeZone,
+      timeStyle: "short",
+      hour12: false,
+    })
+}

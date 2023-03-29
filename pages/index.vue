@@ -1,200 +1,170 @@
 <template>
-  <div class="flex flex-col gap-2 px-4 pt-4 pb-8 max-w-xl w-full mx-auto grow">
-    <!-- Country -->
-    <div class="flex gap-2">
-      <ui-select
-        v-model="selectedCountry"
-        :options="countryesOptions"
-        class="w-full relative z-10"
+  <layout-main>
+    <template #menu>
+      <select-menu
+        :show="menu"
+        :options="countryes"
+        @update:modelValue="selectCountry($event.value)"
+        @close="menu = false"
       />
-      <button
-        class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
-        @click="isList = !isList"
-      >
-        <list-icon v-if="!isList" class="w-8 h-8 fill-current text-black" />
-        <map-icon v-else class="w-8 h-8 fill-current text-black" />
-      </button>
-    </div>
+    </template>
 
-    <!-- Map -->
-    <map-leaflet
-      v-if="!isList"
-      :country="selectedCountry"
-      class="absolute w-full h-full left-0 top-0 z-0"
-    />
-
-    <!-- Result -->
-    <div
-      :class="{
-        'mt-auto': !isList,
-        'grow': isList,
-      }"
-      class="flex flex-col gap-2 relative z-10 max-w-full"
-    >
-      <div
-        :class="{
-          'grow': isList,
-          'scroll-hidden overflow-auto': !isList
-        }"
-        class="relative"
-        @click="toggle"
-      >
-        <ul
-          :class="{
-            'flex-col gap-2 absolute w-full h-full overflow-auto': isList,
-            'flex-row': !isList,
-          }"
-          class="whitespace-nowrap flex">
-          <li
-            v-for="{ name, time, color } in zones"
-            :key="name"
-            :class="[isList ? 'list-item-row' : 'list-item']"
-            :style="`background-color: ${color}`"
-          >
-            <span v-if="isList || !isColapsed" class="list-item-label text-gray-700 font-bold text-xs">{{ name }}</span>
-            <span class="list-item-value text-xl font-bold text-white tabular-nums">{{ time }}</span>
-          </li>
-        </ul>
+    <template #head>
+      <div class="flex gap-2">
+        <ui-input
+          :modelValue="countryes.find(({ value }) => value === selectedCountry)?.label"
+          readonly
+          class="relative z-10"
+          @click="menu = true"
+        />
+        <!-- <button
+          class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
+          @click="collapsed = !collapsed"
+        >
+          <edit-icon class="w-6 h-6 fill-current text-black" />
+        </button> -->
+        <button
+          class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
+          @click="collapsed = !collapsed"
+        >
+          <collapse-icon class="w-8 h-8 fill-current text-black" />
+        </button>
       </div>
+    </template>
 
-      <ui-select v-model="selectedTimeZoneObject" :options="timeZoneOptions" />
+    <template #list>
+      <div class="flex flex-col gap-2">
+        <div
+          v-for="{ color, name, time } of zonesList"
+          :key="name"
+          :style="`background-color: ${color};`"
+          :class="[collapsed ? 'justify-center' : '']"
+          class="flex items-center p-4 rounded"
+        >
+          <div v-if="!collapsed" class="text-base mr-auto">{{ name }}</div>
+          <div class="font-bold text-xl text-black">{{ time }}</div>
+        </div>
+      </div>
+    </template>
 
-      <ui-time-range v-model="time" />
-    </div>
-  </div>
+    <template #slider>
+      <div class="flex">
+        <div
+          v-for="{ color, name, time } of zonesList"
+          :key="name"
+          :style="`background-color: ${color};`"
+          class="p-4"
+        >
+          <div class="text-sm">{{ name }}</div>
+          <div class="text-base">{{ time }}</div>
+        </div>
+      </div>
+    </template>
+
+    <template #range>
+      <ui-time-range
+        v-model="time"
+        :description="timeZone"
+      />
+    </template>
+
+    <template #main>
+      <map-leaflet
+        :country="selectedCountry"
+        :zones="zones"
+        :time="time"
+        class="absolute w-full h-full left-0 top-0 z-0"
+        @select-zone="selectZone"
+      />
+    </template>
+  </layout-main>
 </template>
 
 <script setup>
-  import timezones from "@/lib/timezones.json";
-  import ct from "countries-and-timezones";
+  // -- Imports
   import _ from 'lodash'
-  import ListIcon from '@/assets/icons/list.svg?component'
-  import MapIcon from '@/assets/icons/map.svg?component'
+  import ct from "countries-and-timezones";
+
+  // Icons
+  // import ListIcon from '@/assets/icons/list.svg?component';
+  // import MapIcon from '@/assets/icons/map.svg?component';
+  // import EditIcon from '@/assets/icons/edit.svg?component';
+  import CollapseIcon from '@/assets/icons/collapse.svg?component';
+
+  import { convertTime } from '@/helpers'
   import { COLORS } from '@/constants'
 
+  // -- Data
+  let menu = ref(false);
+  let collapsed = ref(true);
+
+  let timeZone = ref("America/New_York");
   let time = ref("00:00");
   let selectedCountry = ref("US");
-  let selectedTimeZone = reactive({});
-  let isColapsed = ref(true);
-  let isList = ref(false);
+  let selectedZones = reactive([]);
 
-  onMounted(async () => {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    Object.assign(
-      selectedTimeZone,
-      timezones.find(({ utc = [] }) => utc.includes(timezone))
-    );
+  // -- Computed
+  const countryes = computed(() => {
+    const allCountries = ct.getAllCountries();
 
-    time.value = new Date().toLocaleTimeString("en-US", {
-      timeStyle: "short",
-      hour12: false,
-    });
-  });
-
-  const getCountryes = () => {
-    const countryes = ct.getAllCountries();
-    return Object.values(countryes).map((country) => {
-      return {
+    return Object.values(allCountries)
+      .map((country) => ({
         ...country,
         label: country.name,
         value: country.id,
-      };
-    });
-  };
-
-  const countryesOptions = getCountryes();
-
-  const selectedTimeZoneObject = computed({
-    get() {
-      return selectedTimeZone?.text;
-    },
-    set(value) {
-      selectedTimeZone = timezones.find(({ text }) => text === value);
-    },
+      }));
   });
-
-  const timeZoneOptions = timezones.map((item) => ({
-    ...item,
-    label: item.text,
-    value: item.text,
-  }));
-
-  const toggle = () => {
-    if (isList.value) return;
-
-    isColapsed.value = !isColapsed.value;
-  };
 
   const zones = computed(() => {
-    const zones = ct.getTimezonesForCountry(selectedCountry.value);
+    const countryZones = ct.getTimezonesForCountry(selectedCountry.value) || [];
 
-    const formated = zones
-      .sort((a, b) => {
-        const aOffset = parseInt(a?.utcOffsetStr.split(":"));
-        const bOffset = parseInt(b?.utcOffsetStr.split(":"));
-
-        return aOffset - bOffset;
-      })
-      .map((item) => {
-        const offset = parseInt(item?.utcOffsetStr.split(":"));
-        const today = new Date();
-        const splitTime = time.value.split(":");
-
-        today.setHours(splitTime[0], splitTime[1], 0);
-
-        return {
-          ...item,
-          value: item.name,
-          name: item.name,
-          color: COLORS[Math.abs(offset || 0)],
-          time: today.toLocaleTimeString("en-US", {
-            timeZone: item.name,
-            timeStyle: "short",
-            hour12: false,
-          }),
-        };
-    });
-
-    const colapsed = formated.reduce((acc, zone) => {
-      const item = !acc.some(({ utcOffsetStr }) => utcOffsetStr === zone.utcOffsetStr)
-        ? [zone]
-        : [];
-
-      return [
-        ...acc,
-        ...item,
-      ];
-    }, []);
-
-    return !isList.value && isColapsed.value ? colapsed : formated;
+    return [...countryZones, ...selectedZones]
   });
+
+  const zonesList = computed(() => {
+    return zones.value
+      .sort((a, b) => a.dstOffset - b.dstOffset)
+      .reduce((acc, { utcOffsetStr, name }) => {
+        const offset = parseInt(utcOffsetStr.split(':')[0]);
+        const tzTime = convertTime(time.value, name);
+        const color = COLORS[Math.abs(offset || 0)];
+
+        const exist = acc.some(({ offset: accOffset }) => accOffset === offset);
+
+        if (!collapsed.value) {
+          acc.push({ offset, name, time: tzTime, color });
+        } else if (!exist) {
+          acc.push({ offset, time: tzTime, color });
+        }
+
+        return acc;
+      }, [])
+  });
+
+  // -- Mounted
+  onMounted(async () => {
+    timeZone = Intl
+      .DateTimeFormat()
+      .resolvedOptions()
+      .timeZone;
+
+    time.value = new Date()
+      .toLocaleTimeString("en-US", {
+        timeStyle: "short",
+        hour12: false,
+      });
+  });
+
+  // -- Methods
+  const selectCountry = (country) => {
+    selectedZones.length = 0;
+    selectedCountry.value = country;
+  };
+
+  const selectZone = (zone) => {
+    const array = _.xorBy(selectedZones, [ct.getTimezone(zone)], 'name');
+
+    selectedZones.length = 0;
+    selectedZones.push(...array);
+  };
 </script>
-
-<style>
-.list-item {
-  @apply flex flex-col py-3 px-3 w-full text-center first:rounded-l-xl last:rounded-r-xl;
-}
-
-.list-item-row {
-  @apply flex items-center py-3 px-3 w-full text-center rounded-xl;
-}
-
-.list-item-row .list-item-label {
-  @apply text-base mr-auto;
-}
-
-.list-item-row .list-item-value {
-  @apply ml-auto;
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-.scroll-hidden::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.scroll-hidden {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-</style>
