@@ -1,5 +1,5 @@
 <template>
-  <layout-main>
+  <layout-main :is-list="isList">
     <template #menu>
       <select-menu
         :show="menu"
@@ -23,12 +23,13 @@
         >
           <edit-icon class="w-6 h-6 fill-current text-black" />
         </button>
-        <!-- <button
-          class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
-          @click="collapse"
+
+        <button
+          class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center lg:hidden"
+          @click="isList = !isList"
         >
-          <collapse-icon class="w-8 h-8 fill-current text-black" />
-        </button> -->
+          <list-icon class="w-8 h-8 fill-current text-black" />
+        </button>
       </div>
     </template>
 
@@ -69,15 +70,19 @@
     </template>
 
     <template #slider>
-      <div class="flex">
+      <div class="flex overflow-auto scrollbar-hide">
         <div
           v-for="{ color, name, time } of zonesList"
           :key="name"
-          :style="`background-color: ${color};`"
-          class="p-4"
+          class="first:pl-4 last:pr-4 first:rounded-tl-xl first:rounded-bl-xl last:rounded-tr-xl last:rounded-br-xl"
         >
-          <div class="text-sm">{{ name }}</div>
-          <div class="text-base">{{ time }}</div>
+          <div
+            :style="`background-color: ${color};`"
+            class="p-4"
+          >
+            <div class="whitespace-nowrap text-center text-sm">{{ name }}</div>
+            <div class="whitespace-nowrap text-center text-lg font-bold">{{ time }}</div>
+          </div>
         </div>
       </div>
     </template>
@@ -108,7 +113,7 @@
   import draggable from 'vuedraggable'
 
   // Icons
-  // import ListIcon from '@/assets/icons/list.svg?component';
+  import ListIcon from '@/assets/icons/list.svg?component';
   // import MapIcon from '@/assets/icons/map.svg?component';
   import EditIcon from '@/assets/icons/edit.svg?component';
   import CollapseIcon from '@/assets/icons/collapse.svg?component';
@@ -221,7 +226,7 @@
   let menu = ref(false);
   let collapsed = ref(true);
   let editing = ref(false);
-  let drag = ref(false);
+  let isList = ref(false);
 
   let timeZone = ref("America/New_York");
   let time = ref("00:00");
