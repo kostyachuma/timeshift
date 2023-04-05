@@ -1,0 +1,100 @@
+{
+  "timeZonesNamesByOffset": [
+    {
+      "offset": -11,
+      "name": "Midway Island, Samoa"
+    },
+    {
+      "offset": -10,
+      "name": "Hawaii"
+    },
+    {
+      "offset": -9,
+      "name": "Alaska"
+    },
+    {
+      "offset": -8,
+      "name": "Pacific Time (US & Canada)"
+    },
+    {
+      "offset": -7,
+      "name": "Mountain Time (US & Canada)"
+    },
+    {
+      "offset": -6,
+      "name": "Central Time (US & Canada), Mexico City"
+    },
+    {
+      "offset": -5,
+      "name": "Eastern Time (US & Canada), Bogota, Lima"
+    },
+    {
+      "offset": -4,
+      "name": "Atlantic Time (Canada), Caracas, La Paz"
+    },
+    {
+      "offset": -3,
+      "name": "Greenland, Brasilia, Buenos Aires",
+    },
+    {
+      "offset": -2,
+      "name": "Mid-Atlantic"
+    },
+    {
+      "offset": -1,
+      "name": "Azores, Cape Verde Islands"
+    },
+    {
+      "offset": 0,
+      "name": "Western Europe Time, London, Lisbon, Casablanca"
+    },
+    {
+      "offset": 1,
+      "name": "Brussels, Copenhagen, Madrid, Paris"
+    },
+    {
+      "offset": 2,
+      "name": "Kaliningrad, South Africa"
+    },
+    {
+      "offset": 3,
+      "name": "Baghdad, Riyadh, Moscow, St. Petersburg"
+    },
+    {
+      "offset": 4,
+      "name": "Abu Dhabi, Muscat, Baku, Tbilisi"
+    },
+    {
+      "offset": 5,
+      "name": "Ekaterinburg, Islamabad, Karachi, Tashkent"
+    },
+    {
+      "offset": 6,
+      "name": "Almaty, Dhaka, Colombo"
+    },
+    {
+      "offset": 7,
+      "name": "Bangkok, Hanoi, Jakarta"
+    },
+    {
+      "offset": 8,
+      "name": "Beijing, Perth, Singapore, Hong Kong"
+    },
+    {
+      "offset": 9,
+      "name": "Tokyo, Seoul, Osaka, Sapporo, Yakutsk"
+    },
+    {
+      "offset": 10,
+      "name": "Eastern Australia, Guam, Vladivostok"
+    },
+    {
+      "offset": 11,
+      "name": "Magadan, Solomon Islands, New Caledonia"
+    },
+    {
+      "offset": 12,
+      "name": "Auckland, Wellington, Fiji, Kamchatka"
+    }
+  ]
+}

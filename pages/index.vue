@@ -23,12 +23,12 @@
         >
           <edit-icon class="w-6 h-6 fill-current text-black" />
         </button>
-        <button
+        <!-- <button
           class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
           @click="collapse"
         >
           <collapse-icon class="w-8 h-8 fill-current text-black" />
-        </button>
+        </button> -->
       </div>
     </template>
 
@@ -37,25 +37,27 @@
           v-model="zonesList"
           group="transition-group"
           item-key="name"
-          :class="[editing ? 'cursor-pointer' : 'pointer-events-none']"
           class="flex flex-col gap-2"
         >
           <template #item="{element: { color, name, time }}">
             <div class="flex items-center gap-2">
-              <bars-icon v-if="editing" class="w-6 h-6 fill-current text-white" />
+              <bars-icon
+                v-if="editing"
+                class="shrink-0 w-6 h-6 fill-current text-white"
+              />
+
               <div
-                :style="`background-color: ${color};`"
-                :class="[collapsed ? 'justify-center' : '']"
-                class="flex items-center p-4 rounded-xl grow"
+                :style="`background-color: ${color}`"
+                class="flex grow p-4 gap-4 rounded-xl min-w-0 cursor-pointer"
+                @click="collapse"
               >
-                <div v-if="!collapsed" class="text-base mr-auto">{{ name }}</div>
-                <div class="font-bold text-xl text-black">{{ time }}</div>
+                <div class="truncate flex-1 text-base text-black">{{ name }}</div>
+                <div class="whitespace-nowrap font-bold text-xl text-black">{{ time }}</div>
               </div>
 
-              <!-- options -->
               <button
                 v-if="editing"
-                class="cursor-pointer shrink-0 bg-red-500 hover:bg-red-600 transition-colors rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
+                class="shrink-0 cursor-pointer bg-red-500 hover:bg-red-600 transition-colors rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
                 @click="removeTimezone(name)"
               >
                 <remove-icon class="w-6 h-6 fill-current text-white" />
@@ -111,10 +113,108 @@
   import CollapseIcon from '@/assets/icons/collapse.svg?component';
   import RemoveIcon from '@/assets/icons/remove.svg?component';
   import BarsIcon from '@/assets/icons/bars.svg?component';
-  
 
   import { convertTime } from '@/helpers'
   import { COLORS } from '@/constants'
+
+  const timeZonesNamesByOffset = [
+    {
+      "offset": -11,
+      "name": "Midway Island, Samoa"
+    },
+    {
+      "offset": -10,
+      "name": "Hawaii"
+    },
+    {
+      "offset": -9,
+      "name": "Alaska"
+    },
+    {
+      "offset": -8,
+      "name": "Pacific Time (US & Canada)"
+    },
+    {
+      "offset": -7,
+      "name": "Mountain Time (US & Canada)"
+    },
+    {
+      "offset": -6,
+      "name": "Central Time (US & Canada), Mexico City"
+    },
+    {
+      "offset": -5,
+      "name": "Eastern Time (US & Canada), Bogota, Lima"
+    },
+    {
+      "offset": -4,
+      "name": "Atlantic Time (Canada), Caracas, La Paz"
+    },
+    {
+      "offset": -3,
+      "name": "Greenland, Brasilia, Buenos Aires",
+    },
+    {
+      "offset": -2,
+      "name": "Mid-Atlantic"
+    },
+    {
+      "offset": -1,
+      "name": "Azores, Cape Verde Islands"
+    },
+    {
+      "offset": 0,
+      "name": "Western Europe Time, London, Lisbon, Casablanca"
+    },
+    {
+      "offset": 1,
+      "name": "Brussels, Copenhagen, Madrid, Paris"
+    },
+    {
+      "offset": 2,
+      "name": "Kaliningrad, South Africa"
+    },
+    {
+      "offset": 3,
+      "name": "Baghdad, Riyadh, Moscow, St. Petersburg"
+    },
+    {
+      "offset": 4,
+      "name": "Abu Dhabi, Muscat, Baku, Tbilisi"
+    },
+    {
+      "offset": 5,
+      "name": "Ekaterinburg, Islamabad, Karachi, Tashkent"
+    },
+    {
+      "offset": 6,
+      "name": "Almaty, Dhaka, Colombo"
+    },
+    {
+      "offset": 7,
+      "name": "Bangkok, Hanoi, Jakarta"
+    },
+    {
+      "offset": 8,
+      "name": "Beijing, Perth, Singapore, Hong Kong"
+    },
+    {
+      "offset": 9,
+      "name": "Tokyo, Seoul, Osaka, Sapporo, Yakutsk"
+    },
+    {
+      "offset": 10,
+      "name": "Eastern Australia, Guam, Vladivostok"
+    },
+    {
+      "offset": 11,
+      "name": "Magadan, Solomon Islands, New Caledonia"
+    },
+    {
+      "offset": 12,
+      "name": "Auckland, Wellington, Fiji, Kamchatka"
+    }
+  ]
 
   // -- Data
   let menu = ref(false);
@@ -152,7 +252,9 @@
           if (!collapsed.value) {
             acc.push({ id: name, offset, name, time: tzTime, color });
           } else if (!exist) {
-            acc.push({ id: name, offset, time: tzTime, color });
+            const { name: offsetName } = timeZonesNamesByOffset.find(({ offset: tzOffset }) => tzOffset === offset);
+
+            acc.push({ id: name, offset, name: offsetName, time: tzTime, color });
           }
 
           return acc;
