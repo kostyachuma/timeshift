@@ -74,7 +74,7 @@
         <div
           v-for="{ color, name, time } of zonesList"
           :key="name"
-          class="first:pl-4 last:pr-4 first:rounded-tl-xl first:rounded-bl-xl last:rounded-tr-xl last:rounded-br-xl"
+          class="grow first:pl-4 last:pr-4 first:rounded-tl-xl first:rounded-bl-xl last:rounded-tr-xl last:rounded-br-xl"
         >
           <div
             :style="`background-color: ${color};`"
