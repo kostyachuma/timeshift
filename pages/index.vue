@@ -39,7 +39,7 @@
           item-key="name"
           class="flex flex-col gap-2"
         >
-          <template #item="{element: { color, name, time }}">
+          <template #item="{ element: { color, name, time } }">
             <div class="flex items-center gap-2">
               <bars-icon
                 v-if="editing"
