@@ -116,7 +116,7 @@
   import ListIcon from '@/assets/icons/list.svg?component';
   // import MapIcon from '@/assets/icons/map.svg?component';
   import EditIcon from '@/assets/icons/edit.svg?component';
-  import CollapseIcon from '@/assets/icons/collapse.svg?component';
+  // import CollapseIcon from '@/assets/icons/collapse.svg?component';
   import RemoveIcon from '@/assets/icons/remove.svg?component';
   import BarsIcon from '@/assets/icons/bars.svg?component';
 
@@ -226,7 +226,7 @@
   let menu = ref(false);
   let collapsed = ref(true);
   let editing = ref(false);
-  let isList = ref(false);
+  let isList = ref(true);
 
   let timeZone = ref("America/New_York");
   let time = ref("00:00");

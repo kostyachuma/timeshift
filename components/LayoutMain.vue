@@ -35,7 +35,7 @@ export default {
   props: {
     isList: {
       type: Boolean,
-      default: true
+      default: false
     }
   }
 }
