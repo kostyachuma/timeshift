@@ -35,6 +35,7 @@
     <template #list>
         <draggable
           v-model="zonesList"
+          :disabled="!editing"
           group="transition-group"
           item-key="name"
           class="flex flex-col gap-2"

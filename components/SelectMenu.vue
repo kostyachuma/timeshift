@@ -3,7 +3,7 @@
     :class="[
       show ? 'translate-x-0' : '-translate-x-full',
     ]"
-    class="absolute top-0 left-0 w-full h-full bg-slate-800 z-30 pt-6 px-8 flex flex-col transition-all duration-300 ease-in-out transform overflow-hidden"
+    class="absolute top-0 left-0 w-full h-full bg-slate-800 z-30 pt-6 px-4 lg:px-8 flex flex-col transition-all duration-300 ease-in-out transform overflow-hidden"
   >
     <div class="flex gap-2">
       <ui-input
