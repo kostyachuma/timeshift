@@ -5,6 +5,16 @@ import svgLoader from 'vite-svg-loader'
 export default defineNuxtConfig({
   ssr: false,
 
+  app: {
+    head: {
+      script: [{
+        async: true,
+        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9141697667638275",
+        crossorigin: "anonymous",
+      }],
+    },
+  },
+
   modules: [
     "@nuxtjs/tailwindcss",
     // https://github.com/kevinmarrec/nuxt-pwa-module
