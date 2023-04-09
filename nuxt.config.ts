@@ -4,6 +4,7 @@ import svgLoader from 'vite-svg-loader'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
+
   modules: [
     "@nuxtjs/tailwindcss",
     // https://github.com/kevinmarrec/nuxt-pwa-module
@@ -17,10 +18,10 @@ export default defineNuxtConfig({
       apiKey: 'AIzaSyAR5IYUZZ4DbUgYQYiI4kKWo5pRneKXNaQ',
       authDomain: 'timeshift-3871e.firebaseapp.com',
       projectId: 'timeshift-3871e',
-      storageBucket: "timeshift-3871e.appspot.com",
-      messagingSenderId: "426776611222",
+      // storageBucket: "timeshift-3871e.appspot.com",
+      // messagingSenderId: "426776611222",
       appId: '1:426776611222:web:86569f643dc2c9f27df5b7',
-      measurementId: "G-BTFVC5NPDF"
+      // measurementId: "G-BTFVC5NPDF"
     },
   },
 
