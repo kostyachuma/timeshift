@@ -20,9 +20,11 @@
     "leaflet": "^1.9.3",
     "lodash": "^4.17.21",
     "nuxt": "^3.2.0",
+    "nuxt-vuefire": "^0.1.6",
     "prettier": "^2.8.3",
     "tz-lookup": "^6.1.25",
     "vite-svg-loader": "^4.0.0",
-    "vuedraggable": "^4.1.0"
+    "vuedraggable": "^4.1.0",
+    "vuefire": "^3.1.0"
   }
 }
