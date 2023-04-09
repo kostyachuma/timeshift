@@ -1,8 +1,5 @@
 {
   "private": true,
-  "engines": {
-    "node": ">=16.0.0 <18.15.0"
-  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
