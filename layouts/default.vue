@@ -7,8 +7,10 @@
 <style>
 html,
 body {
+  position: fixed;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   background: #191a1a;
   overscroll-behavior-y: none;
 }
