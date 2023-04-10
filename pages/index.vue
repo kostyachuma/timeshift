@@ -35,39 +35,12 @@
     </template>
 
     <template #list>
-        <draggable
+        <list
           v-model="zonesList"
-          :disabled="!editing"
-          group="transition-group"
-          item-key="name"
-          class="flex flex-col gap-2"
-        >
-          <template #item="{ element: { color, name, time } }">
-            <div class="flex items-center gap-2">
-              <bars-icon
-                v-if="editing"
-                class="shrink-0 w-6 h-6 fill-current text-white"
-              />
-
-              <div
-                :style="`background-color: ${color}`"
-                class="flex grow p-4 gap-4 rounded-xl min-w-0 cursor-pointer"
-                @click="collapse"
-              >
-                <div class="truncate flex-1 text-base text-black">{{ name }}</div>
-                <div class="whitespace-nowrap font-bold text-xl text-black tabular-nums">{{ time }}</div>
-              </div>
-
-              <button
-                v-if="editing"
-                class="shrink-0 cursor-pointer bg-red-500 hover:bg-red-600 transition-colors rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
-                @click="removeTimezone(name)"
-              >
-                <remove-icon class="w-6 h-6 fill-current text-white" />
-              </button>
-            </div>
-          </template>
-        </draggable>
+          :editing="editing"
+          @collapse="collapse"
+          @remove-timezone="removeTimezone"
+        />
     </template>
 
     <template #slider>
@@ -97,15 +70,12 @@
   // -- Imports
   import _ from 'lodash'
   import ct from "countries-and-timezones";
-  import draggable from 'vuedraggable'
 
   // Icons
   import ListIcon from '@/assets/icons/list.svg?component';
   // import MapIcon from '@/assets/icons/map.svg?component';
   import EditIcon from '@/assets/icons/edit.svg?component';
   // import CollapseIcon from '@/assets/icons/collapse.svg?component';
-  import RemoveIcon from '@/assets/icons/remove.svg?component';
-  import BarsIcon from '@/assets/icons/bars.svg?component';
 
   import { convertTime } from '@/helpers'
   import { COLORS } from '@/constants'
