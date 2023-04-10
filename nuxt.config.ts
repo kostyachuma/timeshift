@@ -7,6 +7,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      title: 'Time Shift',
       viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
       script: [{
         async: true,
@@ -22,7 +23,17 @@ export default defineNuxtConfig({
     "@kevinmarrec/nuxt-pwa",
     // https://vuefire.vuejs.org/nuxt/getting-started.html
     'nuxt-vuefire',
+    // https://github.com/vuejs/pinia
+    '@pinia/nuxt',
   ],
+
+  imports: {
+    dirs: ['./stores'],
+  },
+
+  pinia: {
+    autoImports: ['defineStore', 'acceptHMRUpdate'],
+  },
 
   vuefire: {
     config: {

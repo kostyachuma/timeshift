@@ -1,0 +1,6 @@
+{
+  "appId": "timeshift.cc",
+  "appName": "Time Shift",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Time Shift</string>
+    <string name="title_activity_main">Time Shift</string>
+    <string name="package_name">timeshift.cc</string>
+    <string name="custom_url_scheme">timeshift.cc</string>
+</resources>

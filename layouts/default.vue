@@ -4,6 +4,16 @@
   </div>
 </template>
 
+<script setup>
+import { getAnalytics } from "firebase/analytics";
+
+getAnalytics();
+
+const app = useApp();
+
+app.fetchPlatform();
+</script>
+
 <style>
 html,
 body {

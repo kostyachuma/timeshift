@@ -3,7 +3,14 @@
     <aside class="relative flex flex-col w-full lg:max-w-lg lg:bg-slate-800">
       <slot name="menu" />
 
-      <div class="py-6 px-4 lg:px-8">
+      <div
+        :class="{
+          'pt-16': app.isIOS,
+          'pt-6': app.isAndroid,
+          'pt-6': app.isWeb
+        }"
+        class="pb-6 px-4 lg:px-8"
+      >
         <div class="relative z-10">
           <slot name="head" />
         </div>
@@ -37,6 +44,17 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  setup() {
+    const app = useApp();
+
+    app.fetchPlatform();
+
+    console.log(app.isIOS)
+
+    return {
+      app
+    };
   }
 }
 </script>

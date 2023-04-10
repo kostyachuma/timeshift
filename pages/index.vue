@@ -17,6 +17,7 @@
           class="relative z-10"
           @click="menu = true"
         />
+
         <button
           class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
           @click="edit"
@@ -54,7 +55,7 @@
                 @click="collapse"
               >
                 <div class="truncate flex-1 text-base text-black">{{ name }}</div>
-                <div class="whitespace-nowrap font-bold text-xl text-black">{{ time }}</div>
+                <div class="whitespace-nowrap font-bold text-xl text-black tabular-nums">{{ time }}</div>
               </div>
 
               <button
@@ -70,21 +71,7 @@
     </template>
 
     <template #slider>
-      <div class="flex overflow-auto scrollbar-hide">
-        <div
-          v-for="{ color, name, time } of zonesList"
-          :key="name"
-          class="grow first:pl-4 last:pr-4 first:rounded-tl-xl first:rounded-bl-xl last:rounded-tr-xl last:rounded-br-xl"
-        >
-          <div
-            :style="`background-color: ${color};`"
-            class="p-4"
-          >
-            <div class="whitespace-nowrap text-center text-sm">{{ name }}</div>
-            <div class="whitespace-nowrap text-center text-lg font-bold">{{ time }}</div>
-          </div>
-        </div>
-      </div>
+      <slider :zones-list="zonesList" />
     </template>
 
     <template #range>
