@@ -10,6 +10,7 @@ body {
   width: 100%;
   height: 100%;
   background: #191a1a;
+  overscroll-behavior-y: none;
 }
 
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
