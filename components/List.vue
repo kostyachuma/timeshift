@@ -20,9 +20,7 @@
           @click="collapse"
         >
           <div class="truncate flex-1 text-base text-black">{{ name }}</div>
-          <div
-            class="whitespace-nowrap font-bold text-xl text-black tabular-nums"
-          >
+          <div class="whitespace-nowrap font-bold text-xl text-black tabular-nums">
             {{ time }}
           </div>
         </div>

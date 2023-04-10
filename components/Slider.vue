@@ -7,7 +7,7 @@
     >
       <div :style="`background-color: ${color};`" class="slider-item p-4">
         <div class="whitespace-nowrap text-center text-sm">{{ name }}</div>
-        <div class="whitespace-nowrap text-center text-lg font-bold">
+        <div class="whitespace-nowrap text-center text-lg font-bold tabular-nums">
           {{ time }}
         </div>
       </div>
