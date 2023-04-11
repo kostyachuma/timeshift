@@ -16,13 +16,13 @@
         </div>
       </div>
 
-      <div v-if="isList" class="relative z-10 grow px-4 lg:px-8 overflow-auto scrollbar-hide">
+      <div v-if="isList" class="relative z-10 grow px-4 lg:px-8 pb-6 overflow-auto scrollbar-hide">
         <slot name="list" />
       </div>
 
-      <div class="py-6 px-4 lg:px-8 mt-auto">
+      <div class="mt-auto">
         <div class="relative z-10">
-          <div v-if="!isList" class="-mx-4 mb-4">
+          <div v-if="!isList" class="mb-3">
             <slot name="slider" />
           </div>
           <slot name="range" />

@@ -5,7 +5,7 @@
       :key="name"
       class="slider-container grow first:pl-4 last:pr-4 first:rounded-tl-xl first:rounded-bl-xl last:rounded-tr-xl last:rounded-br-xl"
     >
-      <div :style="`background-color: ${color};`" class="slider-item p-4">
+      <div :style="`background-color: ${color};`" class="slider-item py-2 px-4">
         <div class="whitespace-nowrap text-center text-sm">{{ name }}</div>
         <div class="whitespace-nowrap text-center text-lg font-bold tabular-nums">
           {{ time }}

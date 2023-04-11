@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-slate-200 py-3 px-4 rounded-xl text-center shadow-md">
+    <div class="bg-slate-200 py-3 px-4 rounded-t-xl text-center shadow-md">
         <input v-model="time" type="time" class="time-input" />
         <input
             :value="timeToMs(time)"
