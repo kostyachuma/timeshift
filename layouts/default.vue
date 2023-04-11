@@ -22,6 +22,7 @@ body {
   height: 100%;
   overflow: hidden;
   background: #191a1a;
+  user-select: none;
   overscroll-behavior-y: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: none;
