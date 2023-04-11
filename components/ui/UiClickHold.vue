@@ -2,6 +2,7 @@
         <!-- @pointerleave="hold = false" -->
   <div
     @contextmenu.prevent
+    @click="click"
     @pointerdown="hold = true"
     @pointerup="hold = false"
     @pointermove="clear"
@@ -31,16 +32,18 @@
             this.$emit("is-hold");
             this.clickCallback = () => {};
             clearTimeout(this.holdTimeout);
-          }, 1000);
+          }, 800);
         } else {
-          this.clickCallback();
           clearTimeout(this.holdTimeout);
         }
       },
     },
     methods: {
+        click() {
+            this.clickCallback();
+        },
         clear() {
-            this.clickCallback = () => {};
+            // this.clickCallback = () => {};
             clearTimeout(this.holdTimeout);
         }
     }
