@@ -1,9 +1,10 @@
 <template>
+        <!-- @pointerleave="hold = false" -->
   <div
     @contextmenu.prevent
     @pointerdown="hold = true"
     @pointerup="hold = false"
-    @pointerleave="hold = false"
+    @pointermove="clear"
   >
     <slot />
   </div>
@@ -37,5 +38,11 @@
         }
       },
     },
+    methods: {
+        clear() {
+            this.clickCallback = () => {};
+            clearTimeout(this.holdTimeout);
+        }
+    }
   };
 </script>
