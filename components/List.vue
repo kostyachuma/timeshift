@@ -6,12 +6,15 @@
     item-key="name"
     class="flex flex-col gap-2 relative"
     @update:modelValue="$emit('update:modelValue', $event)"
+    @end="move = false"
   >
     <template #item="{ element: { color, name, time } }">
       <div class="flex items-center gap-2 sticky top-0">
         <bars-icon
           v-if="editing"
           class="shrink-0 w-6 h-6 fill-current text-white"
+          @pointerdown="move = true"
+          @pointerup="move = false"
         />
 
         <ui-click-hold
@@ -67,7 +70,7 @@ export default {
   },
   computed: {
     draggable () {
-      return this.editing // && this.move;
+      return this.editing && this.move;
     }
   },
   watch: {
