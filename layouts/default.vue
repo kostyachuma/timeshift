@@ -23,6 +23,8 @@ body {
   overflow: hidden;
   background: #191a1a;
   overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
 }
 
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
