@@ -40,6 +40,7 @@
           :editing="editing"
           @collapse="collapse"
           @remove-timezone="removeTimezone"
+          @edit="edit"
         />
     </template>
 
