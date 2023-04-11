@@ -18,12 +18,12 @@
           @click="menu = true"
         />
 
-        <button
+        <!-- <button
           class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
           @click="edit"
         >
           <edit-icon class="w-6 h-6 fill-current text-black" />
-        </button>
+        </button> -->
 
         <button
           class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center lg:hidden"

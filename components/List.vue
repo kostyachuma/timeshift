@@ -14,17 +14,17 @@
           class="shrink-0 w-6 h-6 fill-current text-white"
         />
 
-        <div
+        <ui-click-hold
           :style="`background-color: ${color}`"
           class="flex grow p-4 gap-4 rounded-xl min-w-0 cursor-pointer drop-shadow"
-          @click="collapse"
-          @contextmenu.prevent="edit"
+          @is-click="collapse"
+          @is-hold="edit"
         >
           <div class="truncate flex-1 text-base text-black">{{ name }}</div>
           <div class="whitespace-nowrap font-bold text-xl text-black tabular-nums">
             {{ time }}
           </div>
-        </div>
+        </ui-click-hold>
 
         <button
           v-if="editing"
@@ -72,14 +72,14 @@ export default {
   },
   watch: {
     move(value) {
-      console.log(value);
-    }
+      console.log('move', value);
+    },
   },
   methods: {
     edit () {
       this.$emit('edit');
     },
-    collapse() {
+    collapse () {
       this.$emit('collapse');
     },
     removeTimezone(name) {
