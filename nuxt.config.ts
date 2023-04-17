@@ -62,7 +62,7 @@ export default defineNuxtConfig({
       ogTitle: 'Time Shift - be in time',
       ogDescription: 'Stay connected with the world, wherever you go. TimeShift app displays time zone differences on a world map, making global communication effortless.',
       ogHost: 'https://timeshift.cc',
-      ogImage: 'https://timeshift.app/og-image.png',
+      ogImage: 'https://timeshift.cc/og-image.png',
       ogUrl: 'https://timeshift.cc',
     },
     manifest: {
