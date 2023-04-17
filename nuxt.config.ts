@@ -7,8 +7,15 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Time Shift',
+      title: 'Time Shift - be in time',
       viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
+      meta: [
+        { hid: 'og-type', property: 'og:type', content: 'website' },
+        { hid: 'og-title', property: 'og:title', content: 'Time Shift - be in time' },
+        { hid: 'og-description', property: 'og:description', content: 'Stay connected with the world, wherever you go. TimeShift app displays time zone differences on a world map, making global communication effortless.' },
+        { hid: 'og-image', property: 'og:image', content: 'https://timeshift.app/og-image.svg' },
+        { hid: 'og-url', property: 'og:url', content: 'https://timeshift.cc' },
+      ],
       script: [{
         async: true,
         src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9141697667638275",
