@@ -42,7 +42,7 @@ import geojson from "@/lib/geo.json";
 import countrySettings from "@/lib/country-settings.json";
 
 import { COLORS } from '@/constants'
-import { convertTime } from '@/helpers'
+import { convertTimeByTimeZoneName } from '@/helpers'
 
 const accessToken = '8FYQGFW7TbGM9vBzLzKaXad3djo2XPNmbF17eJXxQNf8PozitsjuzTcvmdDsVpCn'
 
@@ -126,7 +126,7 @@ export default {
       return this.markers.map(marker => {
         return {
           ...marker,
-          time: convertTime(this.time, marker.timeZone)
+          time: convertTimeByTimeZoneName(this.time, marker.timeZone)
         }
       })
     }

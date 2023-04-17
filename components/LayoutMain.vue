@@ -50,11 +50,7 @@ export default {
 
     app.fetchPlatform();
 
-    console.log(app.isIOS)
-
-    return {
-      app
-    };
+    return { app };
   }
 }
 </script>

@@ -18,13 +18,6 @@
           @click="menu = true"
         />
 
-        <!-- <button
-          class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
-          @click="edit"
-        >
-          <edit-icon class="w-6 h-6 fill-current text-black" />
-        </button> -->
-
         <button
           class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center lg:hidden"
           @click="isList = !isList"
@@ -35,12 +28,13 @@
     </template>
 
     <template #list>
+        <!-- @edit="edit" -->
         <list
-          v-model="zonesList"
+          :modelValue="zonesList"
           :editing="editing"
           @collapse="collapse"
           @remove-timezone="removeTimezone"
-          @edit="edit"
+          @update:modelValue="zonesList = $event"
         />
     </template>
 
@@ -75,107 +69,131 @@
   // Icons
   import ListIcon from '@/assets/icons/list.svg?component';
   // import MapIcon from '@/assets/icons/map.svg?component';
-  import EditIcon from '@/assets/icons/edit.svg?component';
+  // import EditIcon from '@/assets/icons/edit.svg?component';
   // import CollapseIcon from '@/assets/icons/collapse.svg?component';
 
-  import { convertTime } from '@/helpers'
+  import { convertTimeByTimeZoneName, convertTimeByTimeZoneUTCOffset } from '@/helpers'
   import { COLORS } from '@/constants'
 
   const timeZonesNamesByOffset = [
     {
-      "offset": -11,
+      "utcOffsetStr": "-11:00",
+      "dstOffsetStr": "-11:00",
       "name": "Midway Island, Samoa"
     },
     {
-      "offset": -10,
+      "utcOffsetStr": "-10:00",
+      "dstOffsetStr": "-09:00",
       "name": "Hawaii"
     },
     {
-      "offset": -9,
+      "utcOffsetStr": "-09:00",
+      "dstOffsetStr": "-08:00",
       "name": "Alaska"
     },
     {
-      "offset": -8,
+      "utcOffsetStr": "-08:00",
+      "dstOffsetStr": "-07:00",
       "name": "Pacific Time (US & Canada)"
     },
     {
-      "offset": -7,
+      "utcOffsetStr": "-07:00",
+      "dstOffsetStr": "-06:00",
       "name": "Mountain Time (US & Canada)"
     },
     {
-      "offset": -6,
+      "utcOffsetStr": "-06:00",
+      "dstOffsetStr": "-05:00",
       "name": "Central Time (US & Canada), Mexico City"
     },
     {
-      "offset": -5,
+      "utcOffsetStr": "-05:00",
+      "dstOffsetStr": "-04:00",
       "name": "Eastern Time (US & Canada), Bogota, Lima"
     },
     {
-      "offset": -4,
+      "utcOffsetStr": "-04:00",
+      "dstOffsetStr": "-03:00",
       "name": "Atlantic Time (Canada), Caracas, La Paz"
     },
     {
-      "offset": -3,
+      "utcOffsetStr": "-03:00",
+      "dstOffsetStr": "-02:00",
       "name": "Greenland, Brasilia, Buenos Aires",
     },
     {
-      "offset": -2,
+      "utcOffsetStr": "-02:00",
+      "dstOffsetStr": "-01:00",
       "name": "Mid-Atlantic"
     },
     {
-      "offset": -1,
+      "utcOffsetStr": "-01:00",
+      "dstOffsetStr": "+00:00",
       "name": "Azores, Cape Verde Islands"
     },
     {
-      "offset": 0,
+      "utcOffsetStr": "00:00",
+      "dstOffsetStr": "+01:00",
       "name": "Western Europe Time, London, Lisbon, Casablanca"
     },
     {
-      "offset": 1,
+      "utcOffsetStr": "01:00",
+      "dstOffsetStr": "+02:00",
       "name": "Brussels, Copenhagen, Madrid, Paris"
     },
     {
-      "offset": 2,
+      "utcOffsetStr": "02:00",
+      "dstOffsetStr": "+03:00",
       "name": "Kaliningrad, South Africa"
     },
     {
-      "offset": 3,
+      "utcOffsetStr": "03:00",
+      "dstOffsetStr": "+04:00",
       "name": "Baghdad, Riyadh, Moscow, St. Petersburg"
     },
     {
-      "offset": 4,
+      "utcOffsetStr": "04:00",
+      "dstOffsetStr": "+04:00",
       "name": "Abu Dhabi, Muscat, Baku, Tbilisi"
     },
     {
-      "offset": 5,
+      "utcOffsetStr": "05:00",
+      "dstOffsetStr": "+05:00",
       "name": "Ekaterinburg, Islamabad, Karachi, Tashkent"
     },
     {
-      "offset": 6,
+      "utcOffsetStr": "06:00",
+      "dstOffsetStr": "+06:00",
       "name": "Almaty, Dhaka, Colombo"
     },
     {
-      "offset": 7,
+      "utcOffsetStr": "07:00",
+      "dstOffsetStr": "+07:00",
       "name": "Bangkok, Hanoi, Jakarta"
     },
     {
-      "offset": 8,
+      "utcOffsetStr": "08:00",
+      "dstOffsetStr": "+08:00",
       "name": "Beijing, Perth, Singapore, Hong Kong"
     },
     {
-      "offset": 9,
+      "utcOffsetStr": "09:00",
+      "dstOffsetStr": "+09:00",
       "name": "Tokyo, Seoul, Osaka, Sapporo, Yakutsk"
     },
     {
-      "offset": 10,
+      "utcOffsetStr": "10:00",
+      "dstOffsetStr": "+10:00",
       "name": "Eastern Australia, Guam, Vladivostok"
     },
     {
-      "offset": 11,
+      "utcOffsetStr": "11:00",
+      "dstOffsetStr": "+11:00",
       "name": "Magadan, Solomon Islands, New Caledonia"
     },
     {
-      "offset": 12,
+      "utcOffsetStr": "12:00",
+      "dstOffsetStr": "+12:00",
       "name": "Auckland, Wellington, Fiji, Kamchatka"
     }
   ]
@@ -203,33 +221,41 @@
       }));
   });
 
-  const zonesList = computed({
-    get () {
-      return selectedZones
-        .reduce((acc, { utcOffsetStr, name }) => {
-          const offset = parseInt(utcOffsetStr.split(':')[0]);
-          const tzTime = convertTime(time.value, name);
-          const color = COLORS[Math.abs(offset || 0)];
+  const zonesList = computed(() => {
+    const groupByOffset = _.groupBy(selectedZones, 'utcOffsetStr');
 
-          const exist = acc.some(({ offset: accOffset }) => accOffset === offset);
+    const formatedGroups = Object.entries(groupByOffset).map(([key, zones]) => {
+      const { name, utcOffsetStr, dstOffsetStr } = timeZonesNamesByOffset.find(
+        ({ utcOffsetStr }) => utcOffsetStr === key
+      );
 
-          if (!collapsed.value) {
-            acc.push({ id: name, offset, name, time: tzTime, color });
-          } else if (!exist) {
-            const { name: offsetName } = timeZonesNamesByOffset.find(({ offset: tzOffset }) => tzOffset === offset);
+      const [hours, _minutes] = utcOffsetStr.split(':');
 
-            acc.push({ id: name, offset, name: offsetName, time: tzTime, color });
-          }
+      return {
+        name,
+        time: convertTimeByTimeZoneUTCOffset(time.value, utcOffsetStr, dstOffsetStr),
+        color: COLORS[Math.abs(+hours || 0)],
+        zones,
+      };
+    });
 
-          return acc;
-        }, [])
-    },
-    set (value) {
-      const arr = value.map(({ id }) => ({ ...ct.getTimezone(id), id }))
+    const flatGroups = formatedGroups.reduce((acc, { zones }) => {
+      acc.push(...zones);
 
-      selectedZones.length = 0;
-      selectedZones.push(...arr)
-    }
+      return acc;
+    }, []);
+
+    const formatedFlatGroups = flatGroups.map(({ utcOffsetStr, name }) => {
+      const offset = parseInt(utcOffsetStr.split(':')[0]);
+
+      return {
+        name,
+        time: convertTimeByTimeZoneName(time.value, name),
+        color: COLORS[Math.abs(offset || 0)],
+      }
+    })
+
+    return collapsed.value ? formatedGroups : formatedFlatGroups;
   });
 
   // -- Mounted

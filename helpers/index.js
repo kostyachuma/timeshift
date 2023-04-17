@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export function timeToMs(timeString = "00:00") {
   const hours = timeString.split(":")[0];
   const minutes = timeString.split(":")[1];
@@ -13,16 +15,30 @@ export function msToTime(ms = 0) {
 
 /**
  * @param {string} time 'HH:MM'
+ * @param {string} timeZone 'America/New_York'
+ * @returns {string} 'HH:MM'
  */
-export function convertTime (time, timeZone) {
+export function convertTimeByTimeZoneName (time, timeZone) {
   const today = new Date();
-  const splitTime = time.split(":");
+  const [hours, minutes] = time.split(":");
 
-  today.setHours(splitTime[0], splitTime[1], 0);
+  today.setHours(hours, minutes, 0);
 
   return today.toLocaleTimeString("en-US", {
       timeZone,
       timeStyle: "short",
       hour12: false,
     })
+}
+
+
+/**
+ * @param {string} time 'HH:mm'
+ * @param {string} timeZoneUTCOffset '+3'
+ * @returns {string} 'HH:mm'
+ */
+export function convertTimeByTimeZoneUTCOffset (time, utcOffset, dstOffset) {
+  const offset = moment().isDST() ? dstOffset : utcOffset;
+
+  return moment(time, "HH:mm").utcOffset(offset).format("HH:mm");
 }
