@@ -10,6 +10,7 @@ export default defineNuxtConfig({
       title: 'Time Shift - be in time',
       viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
       meta: [
+        { name: 'description', content: 'Stay connected with the world, wherever you go. TimeShift app displays time zone differences on a world map, making global communication effortless.' },
         { hid: 'og-type', property: 'og:type', content: 'website' },
         { hid: 'og-title', property: 'og:title', content: 'Time Shift - be in time' },
         { hid: 'og-description', property: 'og:description', content: 'Stay connected with the world, wherever you go. TimeShift app displays time zone differences on a world map, making global communication effortless.' },
