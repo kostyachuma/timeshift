@@ -64,6 +64,7 @@ export default defineNuxtConfig({
       ogHost: 'https://timeshift.cc',
       ogImage: 'https://timeshift.cc/og-image.png',
       ogUrl: 'https://timeshift.cc',
+      twitterCard: 'summary_large_image',
     },
     manifest: {
         name: 'Time Shift',
