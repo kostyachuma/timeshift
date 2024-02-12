@@ -65,6 +65,7 @@
   // -- Imports
   import _ from 'lodash'
   import ct from "countries-and-timezones";
+  import { useResizeObserver } from '@vueuse/core'
 
   // Icons
   import ListIcon from '@/assets/icons/list.svg?component';
@@ -202,7 +203,15 @@
   let menu = ref(false);
   let collapsed = ref(true);
   let editing = ref(false);
+
   let isList = ref(true);
+
+  // watch resize if size < 1024px then isList = false
+  useResizeObserver(document.documentElement, (entries) => {
+    const { width } = entries[0].contentRect;
+
+    isList.value = width > 1023;
+  });
 
   let timeZone = ref("America/New_York");
   let time = ref("00:00");

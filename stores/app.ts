@@ -7,10 +7,6 @@ export const useApp = defineStore('app', {
     isWeb: false,
   }),
 
-  getters: {
-    // double: (state) => state.n * 2,
-  },
-
   actions: {
     fetchPlatform() {
       const platform = Capacitor.getPlatform();
@@ -19,39 +15,6 @@ export const useApp = defineStore('app', {
       this.isAndroid = platform === 'android';
       this.isWeb = platform === 'web';
     }
-
-    // increment(amount = 1) {
-    //   this.incrementedTimes++
-    //   this.n += amount
-    // },
-
-    // changeMe() {
-    //   console.log('change me to test HMR')
-    // },
-
-    // async fail() {
-    //   const n = this.n
-    //   await delay(1000)
-    //   this.numbers.push(n)
-    //   await delay(1000)
-    //   if (this.n !== n) {
-    //     throw new Error('Someone changed n!')
-    //   }
-
-    //   return n
-    // },
-
-    // async decrementToZero(interval: number = 300) {
-    //   if (this.n <= 0) return
-
-    //   while (this.n > 0) {
-    //     this.$patch((state) => {
-    //       state.n--
-    //       state.decrementedTimes++
-    //     })
-    //     await delay(interval)
-    //   }
-    // },
   },
 })
 

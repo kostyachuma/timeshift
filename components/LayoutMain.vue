@@ -28,6 +28,8 @@
           <slot name="range" />
         </div>
       </div>
+
+      <!-- <ui-navigation /> -->
     </aside>
 
     <main class="z-0 absolute w-full h-full lg:relative">

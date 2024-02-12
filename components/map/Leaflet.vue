@@ -13,12 +13,14 @@
         :url="providerURL"
         :options="tileOptions"
       />
+
       <l-geo-json
         :geojson="geo"
         :options-style="style"
       />
+
       <l-marker
-        v-for="{ latlng, time }, index of formatedMarkers"
+        v-for="({ latlng, time }, index) of formatedMarkers"
         :key="index"
         :lat-lng="latlng"
       >
@@ -31,22 +33,30 @@
 </template>
   
 <script>
-import { LMap, LGeoJson, LTileLayer, LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
-import { latLng } from "leaflet";
-import "leaflet/dist/leaflet.css";
-
+// libs
 import _ from 'lodash'
 import tzlookup from "tz-lookup";
+import { LMap, LGeoJson, LTileLayer, LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
+import { latLng, geoJSON } from "leaflet";
+import "leaflet/dist/leaflet.css";
 
+// data
 import geojson from "@/lib/geo.json";
 import countrySettings from "@/lib/country-settings.json";
 
-import { COLORS } from '@/constants'
+// helpers
 import { convertTimeByTimeZoneName } from '@/helpers'
+import { COLORS } from '@/constants'
 
+
+/**
+ * @todo move to .env
+ */
 const accessToken = '8FYQGFW7TbGM9vBzLzKaXad3djo2XPNmbF17eJXxQNf8PozitsjuzTcvmdDsVpCn'
 
 export default {
+  name: "MapLeaflet",
+
   components: {
     LMap,
     LGeoJson,
@@ -54,6 +64,7 @@ export default {
     LMarker,
     LIcon,
   },
+
   props: {
     country: {
       type: String,
@@ -68,14 +79,15 @@ export default {
       default: '00:00'
     }
   },
+
   data () {
     return {
       zoom: 3,
       center: latLng(33.54139466898275, -97.60253906250001),
       countrySettings,
-      markers: [],
     }
   },
+
   computed: {
     providerURL() {
       return [
@@ -83,11 +95,13 @@ export default {
         `https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=${accessToken}`
       ][1]
     },
+
     tileOptions() {
       return {
         attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }
     },
+
     mapOptions () {
       return {
         maxBoundsViscosity: 1.0,
@@ -97,6 +111,7 @@ export default {
         maxBounds: [[-90,-180], [90,180]],
       }
     },
+
     geo () {
       const zones = this.zones // ct.getTimezonesForCountry(this.country);
 
@@ -117,20 +132,20 @@ export default {
             properties: {
               ...feature.properties,
               utc: offset,
-              color: COLORS[Math.abs(offset || 0)]
+              color: COLORS[Math.abs(offset || 0)],
             }
           }
         })
     },
+
     formatedMarkers () {
-      return this.markers.map(marker => {
-        return {
-          ...marker,
-          time: convertTimeByTimeZoneName(this.time, marker.timeZone)
-        }
-      })
+      return this.geo.map((feature) => ({
+        latlng: geoJSON(feature).getBounds().getCenter(),
+        time: convertTimeByTimeZoneName(this.time, feature?.properties?.tzid)
+      }))
     }
   },
+
   watch: {
     country: {
       handler () {
@@ -145,27 +160,30 @@ export default {
       immediate: true
     },
   },
+
   methods: {
     style ({ properties }) {
       return { color: properties?.color || '#95b5e0' }
     },
+
     centerUpdate (center) {
       this.center = center
     },
+
     zoomUpdate (zoom) {
       this.zoom = zoom
     },
+
     handleClick (e) {
       const latlng = e?.latlng
 
-      if (latlng) {
-        this.markers = _.xorBy(this.markers, [{
-          latlng,
-          timeZone: tzlookup(latlng.lat, latlng.lng)
-        }], 'timeZone')
-
-        this.$emit('select-zone', tzlookup(latlng.lat, latlng.lng))
+      if (!latlng) {
+        return
       }
+
+      const { lat, lng } = latlng
+
+      this.$emit('select-zone', tzlookup(lat, lng))
     }
   }
 };
@@ -173,7 +191,7 @@ export default {
 
 <style>
 .map {
-    background: #c9d2d3;
+  background: #c9d2d3;
 }
 
 .marker {

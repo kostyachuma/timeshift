@@ -36,6 +36,7 @@
   "dependencies": {
     "@capacitor/android": "^4.7.3",
     "@capacitor/core": "^4.7.3",
-    "@capacitor/ios": "^4.7.3"
+    "@capacitor/ios": "^4.7.3",
+    "@vueuse/core": "^10.7.2"
   }
 }
