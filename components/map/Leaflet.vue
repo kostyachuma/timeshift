@@ -9,36 +9,44 @@
       @update:center="centerUpdate"
       @click="handleClick"
     >
-      <l-tile-layer
-        :url="providerURL"
-        :options="tileOptions"
-      />
+      <l-tile-layer v-bind="tileLayer"/>
 
       <l-geo-json
         :geojson="geo"
         :options-style="style"
       />
 
-      <l-marker
-        v-for="({ latlng, time }, index) of formatedMarkers"
-        :key="index"
-        :lat-lng="latlng"
-      >
-        <l-icon class-name="relative">
-          <div class="marker">{{ time }}</div>
-        </l-icon>
-      </l-marker>
+      <l-marker-cluster-group>
+        <l-marker
+          v-for="({ latlng, time }, index) of formatedMarkers"
+          :key="index"
+          :lat-lng="latlng"
+        >
+          <l-icon class-name="relative">
+            <div class="marker">{{ time }}</div>
+          </l-icon>
+        </l-marker>
+      </l-marker-cluster-group>
     </l-map>
   </div>
 </template>
   
 <script>
+import L from 'leaflet'
+
+globalThis.L = L
+
+const { latLng, geoJSON } = L
+
 // libs
 import _ from 'lodash'
 import tzlookup from "tz-lookup";
 import { LMap, LGeoJson, LTileLayer, LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
-import { latLng, geoJSON } from "leaflet";
 import "leaflet/dist/leaflet.css";
+
+// cluster
+import { LMarkerClusterGroup } from 'vue-leaflet-markercluster'
+import 'vue-leaflet-markercluster/dist/style.css'
 
 // data
 import geojson from "@/lib/geo.json";
@@ -63,6 +71,7 @@ export default {
     LTileLayer,
     LMarker,
     LIcon,
+    LMarkerClusterGroup,
   },
 
   props: {
@@ -89,16 +98,15 @@ export default {
   },
 
   computed: {
-    providerURL() {
-      return [
-        `https://{s}.tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token=${accessToken}`,
-        `https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=${accessToken}`
-      ][1]
-    },
-
-    tileOptions() {
+    tileLayer () {
       return {
-        attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url: [
+          `https://{s}.tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token=${accessToken}`,
+          `https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=${accessToken}`
+        ][1],
+        options: {
+          attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }
       }
     },
 

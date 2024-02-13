@@ -14,13 +14,13 @@
     "@kevinmarrec/nuxt-pwa": "^0.15.0",
     "@nuxtjs/tailwindcss": "^6.3.0",
     "@pinia/nuxt": "^0.4.8",
-    "@vue-leaflet/vue-leaflet": "^0.8.3",
+    "@vue-leaflet/vue-leaflet": "^0.10.1",
     "countries-and-timezones": "^3.4.1",
     "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "firebase": "^9.19.1",
-    "leaflet": "^1.9.3",
+    "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "nuxt": "^3.2.0",
@@ -37,6 +37,7 @@
     "@capacitor/android": "^4.7.3",
     "@capacitor/core": "^4.7.3",
     "@capacitor/ios": "^4.7.3",
-    "@vueuse/core": "^10.7.2"
+    "@vueuse/core": "^10.7.2",
+    "vue-leaflet-markercluster": "^0.6.0"
   }
 }
