@@ -16,7 +16,10 @@
         :options-style="style"
       />
 
-      <l-marker-cluster-group>
+      <l-marker-cluster-group
+        :maxClusterRadius="35"
+        :showCoverageOnHover="false"
+      >
         <l-marker
           v-for="({ latlng, time }, index) of formatedMarkers"
           :key="index"
