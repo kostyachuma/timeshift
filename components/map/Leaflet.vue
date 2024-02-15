@@ -1,39 +1,3 @@
-<template>
-  <div class="">
-    <l-map
-      ref="myMap"
-      :zoom="zoom"
-      :center="center"
-      :options="mapOptions"
-      class="map"
-      @update:center="centerUpdate"
-      @click="handleClick"
-    >
-      <l-tile-layer v-bind="tileLayer"/>
-
-      <l-geo-json
-        :geojson="geo"
-        :options-style="style"
-      />
-
-      <l-marker-cluster-group
-        :maxClusterRadius="35"
-        :showCoverageOnHover="false"
-      >
-        <l-marker
-          v-for="({ latlng, time }, index) of formatedMarkers"
-          :key="index"
-          :lat-lng="latlng"
-        >
-          <l-icon class-name="relative">
-            <div class="marker">{{ time }}</div>
-          </l-icon>
-        </l-marker>
-      </l-marker-cluster-group>
-    </l-map>
-  </div>
-</template>
-  
 <script>
 import L from 'leaflet'
 
@@ -45,10 +9,10 @@ const { latLng, geoJSON } = L
 import _ from 'lodash'
 import tzlookup from "tz-lookup";
 import { LMap, LGeoJson, LTileLayer, LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
-import "leaflet/dist/leaflet.css";
-
-// cluster
 import { LMarkerClusterGroup } from 'vue-leaflet-markercluster'
+
+// styles
+import "leaflet/dist/leaflet.css";
 import 'vue-leaflet-markercluster/dist/style.css'
 
 // data
@@ -58,7 +22,6 @@ import countrySettings from "@/lib/country-settings.json";
 // helpers
 import { convertTimeByTimeZoneName } from '@/helpers'
 import { COLORS } from '@/constants'
-
 
 /**
  * @todo move to .env
@@ -97,59 +60,75 @@ export default {
       zoom: 3,
       center: latLng(33.54139466898275, -97.60253906250001),
       countrySettings,
+      renderMarkers: true
     }
   },
 
   computed: {
+    map () {
+      return {
+        zoom: this.zoom,
+        center: this.center,
+        options: {
+          maxBoundsViscosity: 1.0,
+          zoomControl: false,
+          minZoom: 2,
+          maxZoom: 12,
+          maxBounds: [[-90,-180], [90,180]],
+        }
+      }
+    },
+
     tileLayer () {
       return {
         url: [
           `https://{s}.tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token=${accessToken}`,
           `https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=${accessToken}`
-        ][1],
+        ][1], // theme
         options: {
           attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }
       }
     },
 
-    mapOptions () {
+    markerClusterGroup () {
       return {
-        maxBoundsViscosity: 1.0,
-        zoomControl: false,
-        minZoom: 2,
-        maxZoom: 12,
-        maxBounds: [[-90,-180], [90,180]],
+        maxClusterRadius: 35,
+        showCoverageOnHover: false
       }
     },
 
     geo () {
       const zones = this.zones // ct.getTimezonesForCountry(this.country);
 
-      return geojson.features
-        .filter(({ properties }) => {
-          return zones
-            .map(({ name }) => name)
-            .includes(properties.tzid)
-        })
-        .map((feature) => {
-          const { tzid } = feature.properties
+      const filter = ({ properties }) => {
+        return zones
+          .map(({ name }) => name)
+          .includes(properties.tzid)
+      }
 
-          const utc = zones.find(({ name }) => name === tzid)
-          const offset = parseInt(utc?.utcOffsetStr.split(':'))
+      const map = (feature) => {
+        const { tzid } = feature.properties
 
-          return {
-            ...feature,
-            properties: {
-              ...feature.properties,
-              utc: offset,
-              color: COLORS[Math.abs(offset || 0)],
-            }
+        const utc = zones.find(({ name }) => name === tzid)
+        const offset = parseInt(utc?.utcOffsetStr.split(':'))
+
+        return {
+          ...feature,
+          properties: {
+            ...feature.properties,
+            utc: offset,
+            color: COLORS[Math.abs(offset || 0)],
           }
-        })
+        }
+      }
+
+      return geojson.features
+        .filter(filter)
+        .map(map)
     },
 
-    formatedMarkers () {
+    markers () {
       return this.geo.map((feature) => ({
         latlng: geoJSON(feature).getBounds().getCenter(),
         time: convertTimeByTimeZoneName(this.time, feature?.properties?.tzid)
@@ -195,16 +174,53 @@ export default {
       const { lat, lng } = latlng
 
       this.$emit('select-zone', tzlookup(lat, lng))
-    }
+    },
+
+    forceRerenderMarkers () {
+      this.renderMarkers = false
+
+      this.$nextTick(() => {
+        this.renderMarkers = true
+      })
+    },
   }
 };
 </script>
 
-<style>
-.map {
-  background: #c9d2d3;
-}
+<template>
+  <l-map
+    v-bind="map"
+    @update:center="centerUpdate"
+    @update:zoom="zoomUpdate"
+    @click="handleClick"
+  >
+    <l-tile-layer v-bind="tileLayer"/>
 
+    <l-geo-json
+      :geojson="geo"
+      :options-style="style"
+    />
+
+    <l-marker-cluster-group
+      v-bind="markerClusterGroup"
+      @animationend="forceRerenderMarkers"
+    >
+      <template v-if="renderMarkers">
+        <l-marker
+          v-for="({ latlng, time }, index) of markers"
+          :key="`marker-${index}`"
+          :lat-lng="latlng"
+        >
+          <l-icon class-name="relative">
+            <div class="marker">{{ time }}</div>
+          </l-icon>
+        </l-marker>
+      </template>
+    </l-marker-cluster-group>
+  </l-map>
+</template>
+
+<style>
 .marker {
   @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-5 bg-white py-1 px-2 rounded text-sm text-black;
 }

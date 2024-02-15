@@ -1,6 +1,10 @@
 <template>
   <div class="absolute w-full h-full mx-auto flex flex-col">
-    <slot />
+    <div class="relative grow">
+      <slot />
+    </div>
+
+    <!-- <ui-navigation /> -->
   </div>
 </template>
 
