@@ -131,7 +131,8 @@ export default {
     markers () {
       return this.geo.map((feature) => ({
         latlng: geoJSON(feature).getBounds().getCenter(),
-        time: convertTimeByTimeZoneName(this.time, feature?.properties?.tzid)
+        time: convertTimeByTimeZoneName(this.time, feature?.properties?.tzid),
+        color: feature?.properties?.color || 'red',
       }))
     }
   },
@@ -207,12 +208,12 @@ export default {
     >
       <template v-if="renderMarkers">
         <l-marker
-          v-for="({ latlng, time }, index) of markers"
+          v-for="({ latlng, time, color }, index) of markers"
           :key="`marker-${index}`"
           :lat-lng="latlng"
         >
           <l-icon class-name="relative">
-            <div class="marker">{{ time }}</div>
+            <div class="marker" :style="`--color: ${color}`">{{ time }}</div>
           </l-icon>
         </l-marker>
       </template>
@@ -223,6 +224,14 @@ export default {
 <style>
 .marker {
   @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-5 bg-white py-1 px-2 rounded text-sm text-black;
+
+  &:before {
+    content: '';
+    
+    @apply block w-full h-0.5 rounded;
+
+    background-color: var(--color, red);
+  }
 }
 
 .marker::after {
