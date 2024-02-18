@@ -177,13 +177,15 @@ export default {
       this.$emit('select-zone', tzlookup(lat, lng))
     },
 
-    forceRerenderMarkers () {
+    forceRerenderMarkers: _.debounce(function () {
+      console.log('forceRerenderMarkers')
+
       this.renderMarkers = false
 
       this.$nextTick(() => {
         this.renderMarkers = true
       })
-    },
+    }, 100)
   }
 };
 </script>
@@ -203,20 +205,19 @@ export default {
     />
 
     <l-marker-cluster-group
+      v-if="renderMarkers"
       v-bind="markerClusterGroup"
       @animationend="forceRerenderMarkers"
     >
-      <template v-if="renderMarkers">
-        <l-marker
-          v-for="({ latlng, time, color }, index) of markers"
-          :key="`marker-${index}`"
-          :lat-lng="latlng"
-        >
-          <l-icon class-name="relative">
-            <div class="marker" :style="`--color: ${color}`">{{ time }}</div>
-          </l-icon>
-        </l-marker>
-      </template>
+      <l-marker
+        v-for="({ latlng, time, color }, index) of markers"
+        :key="`marker-${index}`"
+        :lat-lng="latlng"
+      >
+        <l-icon class-name="relative">
+          <div class="marker" :style="`--color: ${color}`">{{ time }}</div>
+        </l-icon>
+      </l-marker>
     </l-marker-cluster-group>
   </l-map>
 </template>
@@ -227,10 +228,9 @@ export default {
 
   &:before {
     content: '';
-    
-    @apply block w-full h-0.5 rounded;
-
     background-color: var(--color, red);
+
+    @apply block w-full h-0.5 rounded;
   }
 }
 
