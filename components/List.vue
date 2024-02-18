@@ -48,11 +48,13 @@ import BarsIcon from '@/assets/icons/bars.svg?component';
 
 export default {
   name: 'List',
+
   components: {
     draggable,
     RemoveIcon,
     BarsIcon,
   },
+
   props: {
     modelValue: {
       type: Array,
@@ -63,28 +65,38 @@ export default {
       default: false
     },
   },
+
   data() {
     return {
       move: false,
     }
   },
+
   computed: {
     draggable () {
       return this.editing && this.move;
     }
   },
-  watch: {
-    move(value) {
-      console.log('move', value);
-    },
-  },
+
+  /**
+   * @debug
+   */
+
+  // watch: {
+  //   move(value) {
+  //     console.log('move', value);
+  //   },
+  // },
+
   methods: {
     edit () {
       this.$emit('edit');
     },
+
     collapse () {
       this.$emit('collapse');
     },
+
     removeTimezone(name) {
       this.$emit('remove-timezone', name);
     },

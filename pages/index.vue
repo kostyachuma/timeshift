@@ -16,14 +16,18 @@
           readonly
           class="relative z-10"
           @click="menu = true"
-        />
+        >
+          <template #left>
+            <marker-icon class="w-6 h-6 fill-current text-black" />
+          </template>
+        </ui-input>
 
-        <button
+        <!-- <button
           class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center lg:hidden"
           @click="isList = !isList"
         >
           <list-icon class="w-8 h-8 fill-current text-black" />
-        </button>
+        </button> -->
       </div>
     </template>
 
@@ -38,9 +42,9 @@
         />
     </template>
 
-    <template #slider>
+    <!-- <template #slider>
       <slider :zones-list="zonesList" />
-    </template>
+    </template> -->
 
     <template #range>
       <ui-time-range
@@ -68,7 +72,8 @@
   import { useResizeObserver } from '@vueuse/core'
 
   // Icons
-  import ListIcon from '@/assets/icons/list.svg?component';
+  // import ListIcon from '@/assets/icons/list.svg?component';
+  import MarkerIcon from '@/assets/icons/marker.svg?component';
   // import MapIcon from '@/assets/icons/map.svg?component';
   // import EditIcon from '@/assets/icons/edit.svg?component';
   // import CollapseIcon from '@/assets/icons/collapse.svg?component';
