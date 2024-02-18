@@ -18,7 +18,7 @@
 
       <div
         :class="{
-          'h-[72px] mt-auto': !isList,
+          'min-h-[72px] max-h-[140px] mt-auto': !isList,
           'grow': isList
         }"
         class="relative z-10 px-4 lg:px-8 pb-3 overflow-auto scrollbar-hide"
