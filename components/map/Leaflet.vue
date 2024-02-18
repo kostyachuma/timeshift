@@ -178,8 +178,6 @@ export default {
     },
 
     forceRerenderMarkers: _.debounce(function () {
-      console.log('forceRerenderMarkers')
-
       this.renderMarkers = false
 
       this.$nextTick(() => {

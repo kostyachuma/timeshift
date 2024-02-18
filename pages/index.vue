@@ -234,9 +234,13 @@
     const groupByOffset = _.groupBy(selectedZones, 'utcOffsetStr');
 
     const formatedGroups = Object.entries(groupByOffset).map(([key, zones]) => {
-      const { name, utcOffsetStr, dstOffsetStr } = timeZonesNamesByOffset.find(
+      const data = timeZonesNamesByOffset.find(
         ({ utcOffsetStr }) => utcOffsetStr === key
       );
+
+      const name = data?.name || '';
+      const utcOffsetStr = data?.utcOffsetStr || '';
+      const dstOffsetStr = data?.dstOffsetStr || '';
 
       const [hours, _minutes] = utcOffsetStr.split(':');
 
