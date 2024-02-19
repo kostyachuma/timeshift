@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <!-- <ui-navigation /> -->
+      <ui-navigation />
     </aside>
 
     <main class="z-0 absolute w-full h-full lg:relative">

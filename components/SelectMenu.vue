@@ -2,8 +2,9 @@
   <div
     :class="[
       show ? 'translate-x-0' : '-translate-x-full',
+      relative? 'relative' : 'absolute top-0 left-0 w-full h-full',
     ]"
-    class="absolute top-0 left-0 w-full h-full bg-slate-800 z-30 pt-6 px-4 lg:px-8 flex flex-col transition-all duration-300 ease-in-out transform overflow-hidden"
+    class="bg-slate-800 z-30 pt-6 px-4 lg:px-8 flex flex-col transition-all duration-300 ease-in-out transform overflow-hidden"
   >
     <div class="flex gap-2">
       <ui-input
@@ -16,7 +17,9 @@
           <search-icon class="w-6 h-6 fill-current text-black" />
         </template>
       </ui-input>
+
       <button
+        v-if="!relative"
         class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center"
         @click="$emit('close')"
       >
@@ -33,7 +36,7 @@
     </div> -->
 
     <!-- list -->
-    <div class="flex flex-col gap-2 grow overflow-auto scrollbar-hide">
+    <div class="flex flex-col gap-2 pb-4 grow overflow-auto scrollbar-hide">
       <div
         v-for="option of filteredOptions"
         :key="option.label"
@@ -59,6 +62,10 @@
       show: {
         type: Boolean,
         required: false,
+      },
+      relative: {
+        type: Boolean,
+        default: false,
       },
       options: {
         type: Array,

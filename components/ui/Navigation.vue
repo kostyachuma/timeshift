@@ -13,10 +13,15 @@ const navigation = [
       name: 'Cities',
       link: '/cities'
     },
+    // {
+    //   icon: MapIcon,
+    //   name: 'Planner',
+    //   link: '/planner'
+    // },
     {
       icon: MapIcon,
-      name: 'Planner',
-      link: '/planner'
+      name: 'Profile',
+      link: '/profile'
     },
 ]
 </script>
