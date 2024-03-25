@@ -3,140 +3,16 @@
   import ct from "countries-and-timezones";
   import { useResizeObserver } from '@vueuse/core'
   import { convertTimeByTimeZoneName, convertTimeByTimeZoneUTCOffset } from '@/helpers'
-  import { COLORS } from '@/constants'
+  import { timeZonesNamesByOffset, COLORS } from '@/constants'
 
   // Icons
   import MarkerIcon from '@/assets/icons/marker.svg?component';
   import ResetIcon from "@/assets/icons/reset.svg?component";
 
-  const timeZonesNamesByOffset = [
-    {
-      "utcOffsetStr": "-11:00",
-      "dstOffsetStr": "-11:00",
-      "name": "Midway Island, Samoa"
-    },
-    {
-      "utcOffsetStr": "-10:00",
-      "dstOffsetStr": "-09:00",
-      "name": "Hawaii"
-    },
-    {
-      "utcOffsetStr": "-09:00",
-      "dstOffsetStr": "-08:00",
-      "name": "Alaska"
-    },
-    {
-      "utcOffsetStr": "-08:00",
-      "dstOffsetStr": "-07:00",
-      "name": "Pacific Time (US & Canada)"
-    },
-    {
-      "utcOffsetStr": "-07:00",
-      "dstOffsetStr": "-06:00",
-      "name": "Mountain Time (US & Canada)"
-    },
-    {
-      "utcOffsetStr": "-06:00",
-      "dstOffsetStr": "-05:00",
-      "name": "Central Time (US & Canada), Mexico City"
-    },
-    {
-      "utcOffsetStr": "-05:00",
-      "dstOffsetStr": "-04:00",
-      "name": "Eastern Time (US & Canada), Bogota, Lima"
-    },
-    {
-      "utcOffsetStr": "-04:00",
-      "dstOffsetStr": "-03:00",
-      "name": "Atlantic Time (Canada), Caracas, La Paz"
-    },
-    {
-      "utcOffsetStr": "-03:00",
-      "dstOffsetStr": "-02:00",
-      "name": "Greenland, Brasilia, Buenos Aires",
-    },
-    {
-      "utcOffsetStr": "-02:00",
-      "dstOffsetStr": "-01:00",
-      "name": "Mid-Atlantic"
-    },
-    {
-      "utcOffsetStr": "-01:00",
-      "dstOffsetStr": "+00:00",
-      "name": "Azores, Cape Verde Islands"
-    },
-    {
-      "utcOffsetStr": "+00:00",
-      "dstOffsetStr": "+01:00",
-      "name": "Western Europe Time, London, Lisbon, Casablanca"
-    },
-    {
-      "utcOffsetStr": "+01:00",
-      "dstOffsetStr": "+02:00",
-      "name": "Brussels, Copenhagen, Madrid, Paris"
-    },
-    {
-      "utcOffsetStr": "+02:00",
-      "dstOffsetStr": "+03:00",
-      "name": "Kaliningrad, South Africa"
-    },
-    {
-      "utcOffsetStr": "+03:00",
-      "dstOffsetStr": "+04:00",
-      "name": "Baghdad, Riyadh, Moscow, St. Petersburg"
-    },
-    {
-      "utcOffsetStr": "+04:00",
-      "dstOffsetStr": "+04:00",
-      "name": "Abu Dhabi, Muscat, Baku, Tbilisi"
-    },
-    {
-      "utcOffsetStr": "+05:00",
-      "dstOffsetStr": "+05:00",
-      "name": "Ekaterinburg, Islamabad, Karachi, Tashkent"
-    },
-    {
-      "utcOffsetStr": "+06:00",
-      "dstOffsetStr": "+06:00",
-      "name": "Almaty, Dhaka, Colombo"
-    },
-    {
-      "utcOffsetStr": "+07:00",
-      "dstOffsetStr": "+07:00",
-      "name": "Bangkok, Hanoi, Jakarta"
-    },
-    {
-      "utcOffsetStr": "+08:00",
-      "dstOffsetStr": "+08:00",
-      "name": "Beijing, Perth, Singapore, Hong Kong"
-    },
-    {
-      "utcOffsetStr": "+09:00",
-      "dstOffsetStr": "+09:00",
-      "name": "Tokyo, Seoul, Osaka, Sapporo, Yakutsk"
-    },
-    {
-      "utcOffsetStr": "+10:00",
-      "dstOffsetStr": "+10:00",
-      "name": "Eastern Australia, Guam, Vladivostok"
-    },
-    {
-      "utcOffsetStr": "+11:00",
-      "dstOffsetStr": "+11:00",
-      "name": "Magadan, Solomon Islands, New Caledonia"
-    },
-    {
-      "utcOffsetStr": "+12:00",
-      "dstOffsetStr": "+12:00",
-      "name": "Auckland, Wellington, Fiji, Kamchatka"
-    }
-  ]
-
   // -- Data
   let menu = ref(false);
   let collapsed = ref(true);
   let editing = ref(false);
-
   let isList = ref(true);
 
   // watch resize if size < 1024px then isList = false
@@ -148,8 +24,34 @@
 
   let timeZone = ref("America/New_York");
   let time = ref("00:00");
-  let selectedCountry = ref("US");
-  let selectedZones = reactive([]);
+
+  let _selectedCountry = ref("");
+  let selectedCountry = computed({
+    get: () => _selectedCountry.value || localStorage.getItem('selectedCountry') || 'US',
+    set: (value) => {
+      _selectedCountry.value = value;
+      localStorage.setItem('selectedCountry', value)
+    }
+  });
+
+  let _selectedZones = ref(null);
+  let selectedZones = computed({
+    get: () => {
+      if (_selectedZones.value) {
+        return _selectedZones.value;
+      }
+
+      if (localStorage.getItem('selectedZones')) {
+        return JSON.parse(localStorage.getItem('selectedZones'));
+      }
+
+      return [];
+    },
+    set: (value) => {
+      _selectedZones.value = [...value];
+      localStorage.setItem('selectedZones', JSON.stringify(value));
+    }
+  });
 
   // -- Computed
   const countryes = computed(() => {
@@ -164,7 +66,7 @@
   });
 
   const zonesList = computed(() => {
-    const groupByOffset = _.groupBy(selectedZones, 'utcOffsetStr');
+    const groupByOffset = _.groupBy(selectedZones.value, 'utcOffsetStr');
 
     const formatedGroups = Object.entries(groupByOffset).map(([key, zones]) => {
       const data = timeZonesNamesByOffset.find(
@@ -221,12 +123,11 @@
     }
 
     const countryZones = ct.getTimezonesForCountry(value) || [];
-    const arr = [...countryZones, ...selectedZones].sort(
+    const arr = [...countryZones, ...selectedZones.value].sort(
       (a, b) => a.dstOffset - b.dstOffset
     )
 
-    selectedZones.length = 0;
-    selectedZones.push(...arr)
+    selectedZones.value = [...arr];
   }, {
     immediate: true,
   })
@@ -259,10 +160,9 @@
   }
 
   const removeTimezone = (zone) => {
-    const array = selectedZones.filter(({ name }) => name !== zone);
+    const array = selectedZones.value.filter(({ name }) => name !== zone);
 
-    selectedZones.length = 0;
-    selectedZones.push(...array);
+    selectedZones.value = [...array];
   };
 
   const collapse = () => {
@@ -276,15 +176,14 @@
   };
 
   const selectCountry = (country) => {
-    selectedZones.length = 0;
+    selectedZones.value = [];
     selectedCountry.value = country;
   };
 
   const selectZone = (zone) => {
-    const array = _.xorBy(selectedZones, [ct.getTimezone(zone)], 'name');
+    const array = _.xorBy(selectedZones.value, [ct.getTimezone(zone)], 'name');
 
-    selectedZones.length = 0;
-    selectedZones.push(...array);
+    selectedZones.value = [...array];
   };
 </script>
 

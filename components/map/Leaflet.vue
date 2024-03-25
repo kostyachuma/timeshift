@@ -58,13 +58,30 @@ export default {
   data () {
     return {
       zoom: 3,
-      center: latLng(33.54139466898275, -97.60253906250001),
+      _center: null,
       countrySettings,
       renderMarkers: true
     }
   },
 
   computed: {
+    center: {
+      get () {
+        if (this._center) {
+          return this._center
+        }
+
+        if (localStorage.getItem('center')) {
+          return JSON.parse(localStorage.getItem('center'))
+        }
+
+        return [33.54139466898275, -97.60253906250001]
+      },
+      set (center) {
+        this._center = center
+        localStorage.setItem('center', JSON.stringify(center))
+      }
+    },
     map () {
       return {
         zoom: this.zoom,
