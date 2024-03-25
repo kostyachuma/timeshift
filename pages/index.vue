@@ -1,85 +1,13 @@
-<template>
-  <layout-main :is-list="isList">
-    <template #menu>
-      <select-menu
-        :show="menu"
-        :options="countryes"
-        @update:modelValue="selectCountry($event.value)"
-        @close="menu = false"
-      />
-    </template>
-
-    <template #head>
-      <div class="flex gap-2">
-        <ui-input
-          :modelValue="countryes.find(({ value }) => value === selectedCountry)?.label"
-          readonly
-          class="relative z-10"
-          @click="menu = true"
-        >
-          <template #left>
-            <marker-icon class="w-6 h-6 fill-current text-black" />
-          </template>
-        </ui-input>
-
-        <!-- <button
-          class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center lg:hidden"
-          @click="isList = !isList"
-        >
-          <list-icon class="w-8 h-8 fill-current text-black" />
-        </button> -->
-      </div>
-    </template>
-
-    <template #list>
-        <!-- @edit="edit" -->
-        <list
-          :modelValue="zonesList"
-          :editing="editing"
-          @collapse="collapse"
-          @remove-timezone="removeTimezone"
-          @update:modelValue="zonesList = $event"
-        />
-    </template>
-
-    <!-- <template #slider>
-      <slider :zones-list="zonesList" />
-    </template> -->
-
-    <template #range>
-      <ui-time-range
-        v-model="time"
-        :description="timeZone"
-      />
-    </template>
-
-    <template #main>
-      <map-leaflet
-        :country="selectedCountry"
-        :zones="selectedZones"
-        :time="time"
-        class="absolute w-full h-full left-0 top-0 z-0"
-        @select-zone="selectZone"
-      />
-    </template>
-  </layout-main>
-</template>
-
 <script setup>
-  // -- Imports
   import _ from 'lodash'
   import ct from "countries-and-timezones";
   import { useResizeObserver } from '@vueuse/core'
-
-  // Icons
-  // import ListIcon from '@/assets/icons/list.svg?component';
-  import MarkerIcon from '@/assets/icons/marker.svg?component';
-  // import MapIcon from '@/assets/icons/map.svg?component';
-  // import EditIcon from '@/assets/icons/edit.svg?component';
-  // import CollapseIcon from '@/assets/icons/collapse.svg?component';
-
   import { convertTimeByTimeZoneName, convertTimeByTimeZoneUTCOffset } from '@/helpers'
   import { COLORS } from '@/constants'
+
+  // Icons
+  import MarkerIcon from '@/assets/icons/marker.svg?component';
+  import ResetIcon from "@/assets/icons/reset.svg?component";
 
   const timeZonesNamesByOffset = [
     {
@@ -283,11 +211,7 @@
       .resolvedOptions()
       .timeZone;
 
-    time.value = new Date()
-      .toLocaleTimeString("en-US", {
-        timeStyle: "short",
-        hour12: false,
-      });
+    startTime();
   });
 
   // -- Watch
@@ -307,7 +231,33 @@
     immediate: true,
   })
 
+  onBeforeUnmount(() => {
+    stopTime();
+  });
+
   // -- Methods
+  const timeInterval = ref(null);
+  const resetAvailable = computed(() => timeInterval.value === null);
+
+  const startTime = () => {
+    const startInterval = () => {
+      time.value = new Date()
+        .toLocaleTimeString("en-US", {
+          timeStyle: "short",
+          hour12: false,
+        });
+    }
+
+    startInterval();
+
+    timeInterval.value = setInterval(startInterval, 1000);
+  }
+
+  const stopTime = () => {
+    clearInterval(timeInterval.value);
+    timeInterval.value = null;
+  }
+
   const removeTimezone = (zone) => {
     const array = selectedZones.filter(({ name }) => name !== zone);
 
@@ -337,3 +287,74 @@
     selectedZones.push(...array);
   };
 </script>
+
+<template>
+  <layout-main :is-list="isList">
+    <template #menu>
+      <select-menu
+        :show="menu"
+        :options="countryes"
+        @update:modelValue="selectCountry($event.value)"
+        @close="menu = false"
+      />
+    </template>
+
+    <template #head>
+      <div class="flex gap-2">
+        <ui-input
+          :modelValue="countryes.find(({ value }) => value === selectedCountry)?.label"
+          readonly
+          class="relative z-10"
+          @click="menu = true"
+        >
+          <template #left>
+            <marker-icon class="w-6 h-6 fill-current text-black" />
+          </template>
+        </ui-input>
+
+        <!-- <button class="shrink-0 bg-slate-200 rounded-xl w-12 h-12 relative z-10 flex justify-center items-center lg:hidden">
+          <list-icon class="w-8 h-8 fill-current text-black" />
+        </button> -->
+      </div>
+    </template>
+
+    <template #list>
+        <!-- @edit="edit" -->
+        <list
+          :modelValue="zonesList"
+          :editing="editing"
+          @collapse="collapse"
+          @remove-timezone="removeTimezone"
+          @update:modelValue="zonesList = $event"
+        />
+    </template>
+
+    <!-- timeInterval -->
+    <template #range>
+      <ui-time-range
+        v-model="time"
+        :description="timeZone"
+        @input="stopTime"
+      >
+        <template v-if="resetAvailable" #right>
+          <button
+            class="flex bg-slate-200 rounded-xl py-1.5 px-4 justify-center items-center text-base text-black"
+            @click="startTime"
+          >
+            <reset-icon class="w-3.5 h-3.5 mr-1 fill-current text-black" /> Reset
+          </button>
+        </template>
+      </ui-time-range>
+    </template>
+
+    <template #main>
+      <map-leaflet
+        :country="selectedCountry"
+        :zones="selectedZones"
+        :time="time"
+        class="absolute w-full h-full left-0 top-0 z-0"
+        @select-zone="selectZone"
+      />
+    </template>
+  </layout-main>
+</template>
