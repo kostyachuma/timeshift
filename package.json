@@ -23,7 +23,7 @@
     "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "nuxt": "^3.2.0",
+    "nuxt": "^3.11.2",
     "nuxt-vuefire": "^0.1.6",
     "pinia": "^2.0.34",
     "prettier": "^2.8.3",
@@ -38,6 +38,7 @@
     "@capacitor/core": "^4.7.3",
     "@capacitor/ios": "^4.7.3",
     "@vueuse/core": "^10.7.2",
+    "postcss-custom-properties": "^13.3.10",
     "vue-leaflet-markercluster": "^0.6.0"
   }
 }
