@@ -20,15 +20,16 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: [
-    "@nuxtjs/tailwindcss",
-    // https://github.com/kevinmarrec/nuxt-pwa-module
-    "@kevinmarrec/nuxt-pwa",
-    // https://vuefire.vuejs.org/nuxt/getting-started.html
-    'nuxt-vuefire',
-    // https://github.com/vuejs/pinia
-    '@pinia/nuxt',
-  ],
+  modules: ["@nuxtjs/tailwindcss", // https://github.com/kevinmarrec/nuxt-pwa-module
+  "@kevinmarrec/nuxt-pwa", // https://vuefire.vuejs.org/nuxt/getting-started.html
+  'nuxt-vuefire', // https://github.com/vuejs/pinia
+  '@pinia/nuxt', "nuxt-security"],
+
+  // security: {
+  //   headers: {
+
+  //   }
+  // },
 
   imports: {
     dirs: ['./stores'],
