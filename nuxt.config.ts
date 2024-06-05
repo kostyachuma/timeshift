@@ -31,6 +31,16 @@ export default defineNuxtConfig({
   //   }
   // },
 
+  routeRules: {
+    '/custom-route': {
+      security: {
+        headers: {
+          xFrameOptions: false,
+        },
+      },
+    }
+  },
+
   imports: {
     dirs: ['./stores'],
   },
