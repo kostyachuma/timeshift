@@ -12,11 +12,11 @@ export default defineNuxtConfig({
       meta: [
         { name: 'description', content: 'Stay connected with the world, wherever you go. TimeShift app displays time zone differences on a world map, making global communication effortless.' },
       ],
-      script: [{
-        async: true,
-        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9141697667638275",
-        crossorigin: "anonymous",
-      }],
+      // script: [{
+      //   async: true,
+      //   src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9141697667638275",
+      //   crossorigin: "anonymous",
+      // }],
     },
   },
 

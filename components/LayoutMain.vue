@@ -23,7 +23,9 @@
         }"
         class="relative z-10 px-4 lg:px-8 pb-3 overflow-auto scrollbar-hide"
       >
-        <slot name="list" />
+        <div class="hidden lg:block">
+          <slot name="list" />
+        </div>
       </div>
 
       <!-- mt-auto -->
